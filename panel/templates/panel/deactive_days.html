@@ -1,0 +1,142 @@
+{% extends "adminMain.html" %}
+{% block title %}نوبت های منقضی شده{% endblock title %}
+
+{% load jformat %}
+{% load static %}
+{% load custom_tags2 %}
+
+{% block js %}
+
+<script src="{% static 'assets/js/bundle.js' %} "></script>
+<script src="{% static 'assets/js/scripts.js' %} "></script>
+<script src="{% static 'assets/js/demo-settings.js' %} "></script>
+
+{% endblock js %}
+
+{% block content %}
+
+<div class="nk-content">
+    <div class="container-fluid">
+        <div class="nk-content-inner">
+            <div class="nk-content-body">
+                <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between">
+                        <div class="nk-block-head-content">
+                            <h3 class="nk-block-title page-title">نوبت های منقضی شده</h3>
+                            <div class="nk-block-des text-soft">
+                                <p>{{now|jformat:"%A %d %B | %H:%M"}}</p>
+                            </div>
+                        </div>
+                        <!-- .nk-block-head-content -->
+                        <div class="nk-block-head-content">
+                            <div class="toggle-wrap nk-block-tools-toggle">
+                                <a href="#" class="btn btn-icon btn-trigger toggle-expand me-n1" data-target="more-options"><em class="icon ni ni-more-v"></em></a>
+                                <div class="toggle-expand-content" data-content="more-options">
+                                    <ul class="nk-block-tools g-3">
+                                        <li class="nk-block-tools-opt">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalAddDAy" class="btn btn-icon btn-primary d-md-none"><em class="icon ni ni-plus"></em></a>
+                                            <button type="button" class="btn btn-primary d-none d-md-inline-flex" data-bs-toggle="modal" data-bs-target="#modalAddDAy"><em class="icon ni ni-plus"></em><span>افزودن روز</span></button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- .nk-block-head-content -->
+                    </div>
+                    <!-- .nk-block-between -->
+                </div>
+
+                <!-- .nk-block-head -->
+                <div class="nk-block">
+                    <div class="row g-gs">
+                        {% for day in days %}
+                        <div class="col-md-6 col-xxl-3">
+                            <div class="card card-bordered pricing">
+                                <div class="pricing-head">
+                                    <div class="pricing-title">
+                                        <h4 class="card-title title">{{day.day|jformat:"%A %d %B"}} </h4>
+                                    </div>
+                                </div>
+                                <div class="pricing-body">
+                                    <div class="pricing-action">
+                                        <a href="#" class="btn btn-dim btn-danger" data-bs-toggle="modal" data-bs-target="#modalActiveDay-{day.id}" >حذف</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <!--modal active day  start-->
+                        <div class="modal fade" tabindex="-1" id="modalActiveDay-{day.id}">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <a href="#" class="close" data-bs-dismiss="modal"><em class="icon ni ni-cross"></em></a>
+                                    <div class="modal-body modal-body-lg text-center">
+                                        <div class="nk-modal">
+                                            <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-alert bg-danger"></em>
+                                            <h4 class="nk-modal-title">توجه کنید!</h4>
+                                            <div class="nk-modal-text">
+                                                <div class="caption-text">آیا مطمئن هستید که میخواهید روز <span class="fw-bold">{{day|jformat:"%A %d %B"}}</span> را از لیست روز های غیرفعال حذف کنید ؟</div>
+                                            </div>
+                                            <form method="POST" >
+                                                {% csrf_token %}
+                                                <input type="hidden" name="day" value="{{day.day|date:'Y-m-d'}}">
+                                                <div class="nk-modal-action">
+                                                    <button class="btn btn-lg btn-mw btn-primary">بله</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--modal active day  end-->
+                        {% endfor %}
+
+
+
+                        <div class="modal fade" id="modalAddDAy">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">غیرفعال کردن روز</h5>
+                                        <a href="#" class="close" data-bs-dismiss="modal" aria-label="بستن">
+                                            <em class="icon ni ni-cross"></em>
+                                        </a>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action='' method="POST" class="form-validate is-alter">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label class="form-label" for="email-address" >روز موردنظر</label>
+                                                <div class="form-control-wrap" >
+                                                    <select class="form-select js-select2" name="day">
+                                                        <option value="#" >انتخاب کنید</option>
+                                                        {% for day in available_days %}
+                                                            <option value="{{day|date:'Y-m-d'}}" >{{day|jformat:"%A | %d %B"}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <input type='hidden' value="add" name='worker'>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-lg btn-primary">ثبت</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer bg-light">
+                                        <span class="sub-text">ایماژ</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,38 @@
+{% extends "main.html" %}
+{% block title %}ورود کاربر{% endblock title %}
+{% load static %}
+{% block content %}
+
+
+
+<section class="banner-area contact" id="contact">
+    <div class="container h-100">
+        <div class="banner-area__content text-center">
+            <h1>ورود</h1>
+            <nav aria-label="breadcrumb" class="banner-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'indexPage' %}">خانه</a></li>
+                <li class="breadcrumb-item active" aria-current="page">ورود کاربر</li>
+            </ol>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<div class="comment-form container">
+    <h4>کد 6 رقمی را وارد کنید</h4>
+    <form method="POST">
+        <div class="form-group form-inline">
+            {% csrf_token %}
+            <div class="form-group col-lg-6 col-md-6">
+                <input type="text" class="form-control" name='otp' maxlength="6" id="name" required placeholder="کد 6 رقمی را وارد کنید" onfocus="this.placeholder = ''" onblur="this.placeholder = 'کد 6 رقمی را وارد کنید'">
+            </div>
+            <div class="form-group col-lg-6 col-md-6 ">
+                <button type="submit" class="button button-postComment">تایید</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+{% endblock content %}

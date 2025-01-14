@@ -1,0 +1,240 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" class="js">
+    <head>
+        <base href="./" />
+        <meta charset="utf-8" />
+        <meta name="author" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <!-- Fav Icon  -->
+        <link rel="shortcut icon" href="{% static 'Panelimages/logo.png' %}" />
+        <!-- Page Title  -->
+        <title>{% block title %}{% endblock title %}</title>
+        {% block js %}
+        
+        {% endblock js %}
+        <!-- StyleSheets  -->
+        <link rel="stylesheet" href="{% static 'assets/css/dashlite.rtl.css' %}" />
+        <link id="skin-default" rel="stylesheet" href="{% static 'assets/css/theme.css' %}" />
+    </head>
+
+    <body class="has-rtl nk-body bg-lighter npc-default has-sidebar" dir="rtl">
+        <div class="nk-app-root">
+            <!-- main @s -->
+            <div class="nk-main">
+                <!-- sidebar @s -->
+                <div class="nk-sidebar nk-sidebar-fixed is-light" data-content="sidebarMenu">
+                    <div class="nk-sidebar-element nk-sidebar-head">
+                        <div class="nk-sidebar-brand">
+                            <a href="{% url "indexPage" %}" class="logo-link nk-sidebar-logo">
+                                <img class="logo-light logo-img" src="{% static 'Panelimages/logo.png' %}" srcset="{% static 'Panelimages/logo.png' %}" alt="لوگو" />
+                                <img class="logo-dark logo-img" src="{% static 'Panelimages/logo.png' %}" class=" " srcset="{% static 'Panelimages/logo.png' %}" alt="لوگوی تاریک" />
+                                <img class="logo-small logo-img logo-img-small" src="{% static 'Panelimages/logo.png' %}" srcset="{% static 'Panelimages/logo.png' %}" alt="لوگوی کوچک" />
+                            </a>
+                        </div>
+                        <div class="nk-menu-trigger me-n2">
+                            <a href="#" class="nk-nav-toggle nk-quick-nav-icon d-xl-none" data-target="sidebarMenu"><em class="icon ni ni-arrow-left"></em></a>
+                            <a href="#" class="nk-nav-compact nk-quick-nav-icon d-none d-xl-inline-flex" data-target="sidebarMenu"><em class="icon ni ni-menu"></em></a>
+                        </div>
+                    </div>
+                    <!-- .nk-sidebar-element -->
+                    <div class="nk-sidebar-element">
+                        <div class="nk-sidebar-content">
+                            <div class="nk-sidebar-menu" data-simplebar>
+                                <ul class="nk-menu">
+                                    <!-- .nk-menu-item -->
+                                    <li class="nk-menu-item active">
+                                        <a href="{% url 'adminDash' %}" class="nk-menu-link">
+                                            <span class="nk-menu-icon"><em class="icon ni ni-home"></em></span>
+                                            <span class="nk-menu-text">داشبورد</span>
+                                        </a>
+                                    </li>
+                                    <!-- .nk-menu-item -->
+                                    <li class="nk-menu-item">
+                                        <a href="{% url 'Appointments' %}" class="nk-menu-link">
+                                            <span class="nk-menu-icon"><em class="icon ni ni-clock"></em></span>
+                                            <span class="nk-menu-text">نوبت های فعال</span>
+                                        </a>
+                                    </li>
+                                    <!-- .nk-menu-item -->
+                                    <li class="nk-menu-item">
+                                        <a href="{% url 'users' %}" class="nk-menu-link">
+                                            <span class="nk-menu-icon"><em class="icon ni ni-users"></em></span>
+                                            <span class="nk-menu-text">کاربر ها</span>
+                                        </a>
+                                    </li>
+                                    <!-- .nk-menu-item -->
+                                    <li class="nk-menu-item">
+                                        <a href="{% url 'panelblogs' %}" class="nk-menu-link">
+                                            <span class="nk-menu-icon"><em class="icon ni ni-article"></em></span>
+                                            <span class="nk-menu-text">بلاگ ها<span>
+                                        </a>
+                                    </li>
+                                    <!-- .nk-menu-item -->
+                                    <li class="nk-menu-item">
+                                        <a href="{% url 'Admins' %}" class="nk-menu-link">
+                                            <span class="nk-menu-icon"><em class="icon ni ni-user"></em></span>
+                                            <span class="nk-menu-text">ادمین ها</span>
+                                        </a>
+                                    </li>
+                                    <!-- .nk-menu-item -->
+                                    <li class="nk-menu-item">
+                                        <a href="{% url 'deactiveDays' %}" class="nk-menu-link">
+                                            <span class="nk-menu-icon"><em class="icon ni ni-calendar"></em></span>
+                                            <span class="nk-menu-text">روزهای غیرفعال</span>
+                                        </a>
+                                    </li>
+                                    <!-- .nk-menu-item -->
+                                    <li class="nk-menu-item">
+                                        <a href="{% url 'expAppointments' %}" class="nk-menu-link">
+                                            <span class="nk-menu-icon"><em class="icon ni ni-trash"></em></span>
+                                            <span class="nk-menu-text">نوبت های منقضی شده</span>
+                                        </a>
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+                            <!-- .nk-sidebar-menu -->
+                        </div>
+                        <!-- .nk-sidebar-content -->
+                    </div>
+                    <!-- .nk-sidebar-element -->
+                </div>
+                <!-- sidebar @e -->
+                <!-- wrap @s -->
+                <div class="nk-wrap">
+                    <!-- main header @s -->
+                    <div class="nk-header nk-header-fixed is-light">
+                        <div class="container-fluid">
+                            <div class="nk-header-wrap">
+                                <div class="nk-menu-trigger d-xl-none ms-n1">
+                                    <a href="#" class="nk-nav-toggle nk-quick-nav-icon" data-target="sidebarMenu"><em class="icon ni ni-menu"></em></a>
+                                </div>
+                                <div class="nk-header-brand d-xl-none">
+                                    <a href="{% url "indexPage" %}" class="logo-link">
+                                        <img class="logo-light logo-img" src="{% static 'Panelimages/logo.png' %}" srcset="{% static 'Panelimages/logo.png' %}" alt="لوگو" />
+                                        <img class="logo-dark logo-img" src="{% static 'Panelimages/logo.png' %}" srcset="{% static 'Panelimages/logo.png' %}" alt="لوگوی تاریک" />
+                                    </a>
+                                </div>
+                                <!-- .nk-header-brand -->
+                                <form id="searchForm"  method="GET" action='{% url "users" %}' class="nk-header-search ms-3 ms-xl-0">
+                                    <em class="icon ni ni-search"></em>
+                                    <input type="text" id="searchInput" name="q" class="form-control border-transparent form-focus-none" placeholder="جستجوی کاربران" />
+                                </form >
+                                
+                                <!-- .nk-header-news -->
+                                <div class="nk-header-tools">
+                                    <ul class="nk-quick-nav">
+                                        <li class="dropdown user-dropdown">
+                                            <a href="#" class="dropdown-toggle me-n1" data-bs-toggle="dropdown">
+                                                <div class="user-toggle">
+                                                    <div class="user-avatar sm">
+                                                        <img class="user-avatar" src={{user.avatar.url}}>
+                                                    </div>
+                                                    <div class="user-info d-none d-xl-block">
+                                                        <div class="user-status user-status-unverified">{% if user.level == "3" %}مدیر{% endif %}</div>
+                                                        <div class="user-name dropdown-indicator">{{user.user.name}} {{user.user.last_name}}</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-md dropdown-menu-end">
+                                                <div class="dropdown-inner user-card-wrap bg-lighter d-none d-md-block">
+                                                    <div class="user-card">
+                                                        <div class="user-avatar">
+                                                            <img class="user-avatar" src={{user.avatar.url}}>
+                                                        </div>
+                                                        <div class="user-info">
+                                                            <span class="lead-text">{{user.user.name}} {{user.user.last_name}}</span>
+                                                            <span class="sub-text">{{user.user.username}}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-inner">
+                                                    <ul class="link-list">
+                                                        <li>
+                                                            <a href="{% url 'Users_detail' user.user.id %}"><em class="icon ni ni-user-alt"></em><span>مشاهده پروفایل</span></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="dropdown-inner">
+                                                    <ul class="link-list">
+                                                        <li>
+                                                            <a href="{% url 'Logout' %}"><em class="icon ni ni-signout"></em><span>خروج</span></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- .nk-header-wrap -->
+                        </div>
+                        <!-- .container-fliud -->
+                    </div>
+                    <!-- main header @e -->
+                    <!-- content @s -->
+                    
+                    {% block content %}
+                    
+                        
+
+                    {% endblock content %}
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            {% if messages %}
+                                // Create empty arrays to store success and error messages
+                                var successMessages = [];
+                                var errorMessages = [];
+                        
+                                // Loop through each message and categorize them as success or error
+                                {% for message in messages %}
+                                    {% if message.tags == 'error' %}
+                                        errorMessages.push("{{ message|safe }}");
+                                    {% else %}
+                                        successMessages.push("{{ message|safe }}");
+                                    {% endif %}
+                                {% endfor %}
+                        
+                                // Function to generate HTML list from an array of messages
+                                function generateHTMLList(messages) {
+                                    var html = '<ul class="messages">';
+                                    messages.forEach(function(message) {
+                                        html += '<li>' + message + '</li>';
+                                    });
+                                    html += '</ul>';
+                                    return html;
+                                }
+                        
+                                // Display SweetAlert modals for success and error messages separately
+                                if (successMessages.length > 0) {
+                                    var successMessageText = generateHTMLList(successMessages);
+                                    Swal.fire({
+                                        title: 'تبریک',
+                                        html: successMessageText,
+                                        icon: 'success'
+                                    });
+                                }
+                        
+                                if (errorMessages.length > 0) {
+                                    var errorMessageText = generateHTMLList(errorMessages);
+                                    Swal.fire({
+                                        title: 'ارور',
+                                        html: errorMessageText,
+                                        icon: 'error'
+                                    });
+                                }
+                            {% endif %}
+                        });
+                    </script>
+                    <!-- content @e -->
+                </div>
+                <!-- wrap @e -->
+            </div>
+            <!-- main @e -->
+        </div>
+        <!-- JavaScript -->
+        
+    </body>
+</html>

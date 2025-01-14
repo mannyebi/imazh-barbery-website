@@ -1,0 +1,333 @@
+{% extends "adminMain.html" %}
+{% load static %}
+{% load custom_tags %}
+{% block title %}داشبورد{% endblock title %}
+
+{% block js %}
+    <script src="{% static 'assets/js/bundle.js' %} "></script>
+    <script src="{% static 'assets/js/scripts.js' %} "></script>
+    <script  type="module" src="{% static 'assets/js/chart.js' %}"></script>
+    <script src="{% static 'assets/js/demo-settings.js' %} "></script>
+{% endblock js %}
+
+{% load custom_tags2 %}
+{% load custom_tags %}
+{% load tz %}
+{% load humanize %}
+{% load jformat %}
+{% block content %}
+
+    <div class="nk-content">
+        <div class="container-fluid">
+            <div class="nk-content-inner">
+                <div class="nk-content-body">
+                    <div class="nk-block-head nk-block-head-sm">
+                        <div class="nk-block-between">
+                            <div class="nk-block-head-content">
+                                <h3 class="nk-block-title page-title">داشبورد</h3>
+                                <div class="nk-block-des text-soft">
+                                    <p>{{today|jformat:"%A %d %B | %H:%M"}}</p>
+                                </div>
+                            </div>
+                            <!-- .nk-block-head-content -->
+                        </div>
+                        <!-- .nk-block-between -->
+                    </div>
+                    <!-- .nk-block-head -->
+                    <div class="nk-block">
+                        <div class="row g-gs">
+                            <div class="col-sm-12">
+                                <div class="row g-gs">
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
+                                        <div class="card">
+                                            <div class="nk-ecwg nk-ecwg3">
+                                                <div class="card-inner pb-5">
+                                                    <div class="card-title-group">
+                                                        <div class="card-title">
+                                                            <h6 class="title">نوبت های امروز</h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="data">
+                                                        <div class="data-group">
+                                                            <div class="amount fw-normal">{{appointments|length}}</div>
+                                                            <div class="info text-end">
+                                                                {% if progress >= 0 %}
+                                                                <span class="change up text-danger"><em class="icon ni ni-arrow-long-up"></em>{{progress|floatformat:2}}%</span><br />
+                                                                {% else %}
+                                                                <span class="change down text-danger"><em class="icon ni ni-arrow-long-down"></em>{{progress|floatformat:2}}%</span><br />
+                                                                {% endif %}
+                                                                <span>در مقایسه با دیروز</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- .nk-ecwg -->
+                                        </div>
+                                        <!-- .card -->
+                                    </div>
+                                    <!-- .col -->
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
+                                        <div class="card">
+                                            <div class="nk-ecwg nk-ecwg3">
+                                                <div class="card-inner pb-5">
+                                                    <div class="card-title-group">
+                                                        <div class="card-title">
+                                                            <h6 class="title">نوبت های منقضی شده</h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="data">
+                                                        <div class="data-group">
+                                                            <div class="amount fw-normal">{{closedAppointments|length}}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- .nk-ecwg -->
+                                        </div>
+                                        <!-- .card -->
+                                    </div>
+                                    <!-- .col -->
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
+                                        <div class="card">
+                                            <div class="nk-ecwg nk-ecwg3">
+                                                <div class="card-inner pb-5">
+                                                    <div class="card-title-group">
+                                                        <div class="card-title">
+                                                            <h6 class="title">نوبت بعدی</h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="data">
+                                                        <div class="data-group mh-50">
+                                                            {% if next_app is null %}
+                                                            <div class="amount fw-bold">خالی</div>
+                                                            <div class="info text-end">
+                                                                <div class="fw-normal">-</div>
+                                                            </div>
+                                                            {% else %}
+                                                            <div class="fw-normal amount fs-22px">{{next_app.user.name}} {{next_app.user.last_name}}</div>
+                                                            <div class="info text-end">
+                                                                <div class="fw-light amount fs-25px">{{next_app.time|import12to24}}</div>
+                                                            </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- .nk-ecwg -->
+                                        </div>
+                                        <!-- .card -->
+                                    </div>
+                                    
+                                    <!-- .col -->
+                                </div>
+                                <!-- .row -->
+                            </div>
+                            
+                            <div class="col-sm-12">
+                                <div class="row g-gs">
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="card card-bordered card-preview">
+                                            <div class="card-inner">
+                                                <div class="card-head">
+                                                    <h6 class="title">تراکم نوبت ها</h6>
+                                                </div>
+                                                <div class="nk-ck center">
+                                                    <canvas class="line-chart" id="appointmentChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- .card-preview -->
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="card card-bordered card-preview">
+                                            <div class="card-inner">
+                                                <div class="card-head">
+                                                    <h6 class="title">تاریخچه درآمد</h6>
+                                                </div>
+                                                <div class="nk-ck center">
+                                                    <canvas class="line-chart" id="incomeChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- .card-preview -->
+                                    </div>
+                                </div>
+                                <!-- .row -->
+                            </div>
+                            <div class="col-xxl-12">
+                                <div class="card card-full">
+                                    <div class="card-inner">
+                                        <div class="card-title-group">
+                                            <div class="card-title">
+                                                <h6 class="title">نوبت های امروز</h6>
+                                            </div>
+                                            <div class="card-tools">
+                                                <a href="{% url 'Appointments' %}" class="link">مشاهده همه</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="nk-tb-list mt-n2">
+                                        <div class="nk-tb-item nk-tb-head">
+                                            <div class="nk-tb-col "><span>مشتری</span></div>
+                                            <div class="nk-tb-col tb-col-sm"><span>تلفن</span></div>
+                                            <div class="nk-tb-col tb-col-md"><span>ساعت</span></div>
+                                            <div class="nk-tb-col"><span class="d-none d-sm-inline">وضعیت</span></div>
+                                        </div>
+                                        {% for appointment in appointments %}
+                                        <div class="nk-tb-item">
+                                            <div class="nk-tb-col">
+                                                <div class="user-card">
+                                                    <div class="user-avatar sm bg-purple-dim">
+                                                        <span>{{appointment.user.name.0}} {{appointment.user.last_name.0}}</span>
+                                                    </div>
+                                                    <div class="user-name">
+                                                        <span class="tb-lead">{{appointment.user.name}} {{appointment.user.last_name}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="nk-tb-col tb-col-sm">
+                                                <span class="tb-sub tb-amount">{{appointment.user.username}}</span>
+                                            </div>
+                                            <div class="nk-tb-col tb-col-md">
+                                                <span class="tb-sub">{{appointment.time|import12to24}}</span>
+                                            </div>
+                                            <div class="nk-tb-col">
+                                                {% if appointment.status == "free" %}
+                                                <span class="badge badge-dot badge-dot-xs bg-success">فعال</span>
+                                                {% else %}
+                                                <span class="badge badge-dot badge-dot-xs bg-danger">منقضی</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <!-- .card -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--in cdn soraat ro kam mikone baadan taghiresh bede-->
+    <!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+    <script>
+        const ctx = document.getElementById('appointmentChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['شنبه', 'یکشنبه', 'دوشنبه', 'سه شنبه', 'چهارشنبه', '  پنجشنبه'],
+                datasets: [{
+                    label: 'نوبت',
+                    data: [{{weekly_count_list.0}}, {{weekly_count_list.1}}, {{weekly_count_list.2}}, {{weekly_count_list.3}}, {{weekly_count_list.4}}, {{weekly_count_list.5}}],
+                    borderWidth: 2,
+                    borderColor: "#9d72ff",
+                    backgroundColor: "rgba(157, 114, 255, 0.2)", // Filled area color
+                    fill: true, // Fill the area below the line
+                    lineTension: 0.4 // Controls the curvature of the lines
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 18,
+                                family: 'YekanBakhFaNum'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        titleFont: {
+                            size: 16, // Change the size of the tooltip title font
+                            family: 'YekanBakhFaNum', // Change the font family of the tooltip title
+                        },
+                        bodyFont: {
+                            size: 14, // Change the size of the tooltip body font
+                            family: 'YekanBakhFaNum', // Change the font family of the tooltip body
+                        }
+                    }
+                },
+                
+                scales: {
+                    x: { // For x-axis labels
+                        ticks: {
+                            font: {
+                                family: 'YekanBakhFaNum', // Change the font family here
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1, // Set step size to 1
+                            font: {
+                                size:15,
+                                family: 'YekanBakhFaNum', // Change the font family here
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+
+        const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+
+        new Chart(incomeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['شنبه', 'یکشنبه', 'دوشنبه', 'سه شنبه', 'چهار شنبه', 'پنجشنبه'],
+                datasets: [{
+                    label: 'درآمد به تومان',
+                    data: [{{weekly_count_list.0|multiply:200000}}, {{weekly_count_list.1|multiply:200000}}, {{weekly_count_list.2|multiply:200000}}, {{weekly_count_list.3|multiply:200000}}, {{weekly_count_list.4|multiply:200000}}, {{weekly_count_list.5|multiply:200000}}],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Bar color
+                    borderColor: 'rgba(75, 192, 192, 1)', // Border color
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 200000, // Set step size to 1
+                            font: {
+                                size:14,
+                                family: 'YekanBakhFaNum', // Change the font family here
+                            }
+                        }
+                    },
+                    x:{
+                        ticks: {
+                            font: {
+                                family: 'YekanBakhFaNum', // Change the font family here
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Hide legend
+                    },
+                    tooltip: {
+                        titleFont: {
+                            size: 16, // Change the size of the tooltip title font
+                            family: 'YekanBakhFaNum', // Change the font family of the tooltip title
+                        },
+                        bodyFont: {
+                            size: 12, // Change the size of the tooltip body font
+                            family: 'YekanBakhFaNum', // Change the font family of the tooltip body
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+
+{% endblock content %}
+

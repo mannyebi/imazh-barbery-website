@@ -1,0 +1,120 @@
+{% extends "userMain.html" %}
+{% load static %}
+{% block title %}داشبورد{% endblock title %}
+
+{% block js %}
+    <script src="{% static 'assets/js/bundle.js' %} "></script>
+    <script src="{% static 'assets/js/scripts.js' %} "></script>
+    <script  type="module" src="{% static 'assets/js/chart.js' %}"></script>
+    <script src="{% static 'assets/js/demo-settings.js' %} "></script>
+{% endblock js %}
+
+{% load custom_tags %}
+{% load custom_tags2 %}
+{% load jformat %}
+{% block content %}
+
+    <div class="nk-content">
+        <div class="container-fluid">
+            <div class="nk-content-inner">
+                <div class="nk-content-body">
+                    <div class="nk-block-head nk-block-head-sm">
+                        <div class="nk-block-between">
+                            <div class="nk-block-head-content">
+                                <h3 class="nk-block-title page-title">داشبورد</h3>
+                                <div class="nk-block-des text-soft">
+                                    <p>{{today|jformat:"%A %d %B | %H:%M"}}</p>
+                                </div>
+                            </div>
+                            <!-- .nk-block-head-content -->
+                        </div>
+                        <!-- .nk-block-between -->
+                    </div>
+                    <!-- .nk-block-head -->
+                    <div class="nk-block">
+                        <div class="row g-gs">
+                            <div class="col-xxl-12">
+                                <div class="card card-full">
+                                    <div class="card-inner">
+                                        <div class="card-title-group">
+                                            <div class="card-title">
+                                                <h6 class="title">نوبت های امروز</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="nk-tb-list mt-n2">
+                                        <div class="nk-tb-item nk-tb-head">
+                                            <div class="nk-tb-col tb-col-sm"><span>کاربر</span></div>
+                                            <div class="nk-tb-col "><span>تاریخ</span></div>
+                                            <div class="nk-tb-col "><span>ساعت</span></div>
+                                            <div class="nk-tb-col tb-col-md"><span class="d-none d-sm-inline">وضعیت</span></div>
+                                        </div>
+                                        {% for appointment in page_obj %}
+                                        <div class="nk-tb-item">
+                                            <div class="nk-tb-col tb-col-sm">
+                                                <div class="user-card">
+                                                    <div class="user-avatar sm bg-purple-dim">
+                                                        <span>{{appointment.user.name.0}} {{appointment.user.last_name.0}}</span>
+                                                    </div>
+                                                    <div class="user-name">
+                                                        <span class="tb-lead">{{appointment.user.name}} {{appointment.user.last_name}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="nk-tb-col">
+                                                <span class="tb-sub tb-amount">{{appointment.day|jformat:"%A %d %B"}}</span>
+                                            </div>
+                                            <div class="nk-tb-col">
+                                                <span class="tb-sub">{{appointment.time|import12to24}}</span>
+                                            </div>
+                                            <div class="nk-tb-col tb-col-md">
+                                                {% if appointment.status == "free" %}
+                                                <span class="badge badge-dot badge-dot-xs bg-success">فعال</span>
+                                                {% else %}
+                                                <span class="badge badge-dot badge-dot-xs bg-danger">منقضی</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="card-inner">
+                                        <div class="nk-block-between-md g-3">
+                                            <div class="g">
+                                                <ul class="pagination justify-content-center justify-content-md-start">
+                                                    {% if page_obj.has_previous %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{{request.user.id}}?page={{ page_obj.previous_page_number }}">قبلی</a>
+                                                    </li>
+                                                    {% endif %}
+
+                                                    {% for num in page_obj.paginator.page_range %}
+                                                    <li class="page-item{% if page_obj.number == num %} active{% endif %}">
+                                                        <a class="page-link" href="{{request.user.id}}?page={{ num }}">{{ num }}</a>
+                                                    </li>
+                                                    {% endfor %}
+                                                    
+                                                    {% if page_obj.has_next %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{{request.user.id}}?page={{ page_obj.next_page_number }}">بعدی</a>
+                                                    </li>
+                                                    {% endif %}
+                                                </ul>
+                                                <!-- .pagination -->
+                                            </div>
+                                        </div>
+                                        <!-- .nk-block-between -->
+                                    </div>
+                                </div>
+                                <!-- .card -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--in cdn soraat ro kam mikone baadan taghiresh bede-->
+    <!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+
+{% endblock content %}
+

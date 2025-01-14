@@ -1,0 +1,157 @@
+{% extends "adminMain.html" %}
+{% block title %}ادمین ها{% endblock title %}
+{% load static %}
+{% load jformat %}
+
+{% block js %}
+    <script src="{% static 'assets/js/bundle.js' %} "></script>
+    <script src="{% static 'assets/js/scripts.js' %} "></script>
+    <script src="{% static 'assets/js/demo-settings.js' %} "></script>
+
+{% endblock js %}
+
+{% block content %}
+
+<div class="nk-content">
+    <div class="container">
+        <div class="nk-content-inner">
+            <div class="nk-content-body">
+                <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between">
+                        <div class="nk-block-head-content">
+                            <h3 class="nk-block-title page-title">ادمین ها</h3>
+                        </div>
+                        <!-- .nk-block-head-content -->
+                        <div class="nk-block-head-content">
+                            <div class="toggle-wrap nk-block-tools-toggle">
+                                <a href="#" class="btn btn-icon btn-trigger toggle-expand me-n1" data-target="pageMenu"><em class="icon ni ni-more-v"></em></a>
+                                <div class="toggle-expand-content" data-content="pageMenu">
+                                    <ul class="nk-block-tools g-3">
+                                        <li class="nk-block-tools-opt">
+                                            <a href="#" data-target="addProduct" class="toggle btn btn-icon btn-primary d-md-none"><em class="icon ni ni-plus"></em></a>
+                                            <a href="#" data-target="addProduct" class="toggle btn btn-primary d-none d-md-inline-flex"><em class="icon ni ni-plus"></em><span>افزودن ادمین</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- .nk-block-head-content -->
+                    </div>
+                    <!-- .nk-block-between -->
+                </div>
+                <!-- .nk-block-head -->
+                <div class="nk-block">
+                    <div class="row g-gs">
+                        {% for profile in profiles %}
+                            {% if profile.level == '2' or profile.level == "3" %}
+                                <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                    <div class="card card-bordered product-card">
+                                        <div class="product-thumb">
+                                            <a href="{% url 'Users_detail' profile.user.id %}">
+                                                <img class="card-img-top" src="{{profile.avatar.url}}" alt="" />
+                                            </a>
+                                        </div>
+                                        <div class="card-inner text-center">
+                                            <ul class="product-tags">
+                                                <li><a href="#">{% if profile.level == "3" %}مدیر {% else %} ادمین{% endif %}</a></li>
+                                            </ul>
+                                            <h5 class="product-title">
+                                                <a href="{% url 'Users_detail' profile.user.id %}">{{profile.user.name}} {{profile.user.last_name}}</a>
+                                            </h5>
+                                            <div class="product-price text-success h5">
+                                                {{profile.title}} 
+                                            </div>
+                                            {% if profile.level == "2" %}
+                                            <a data-bs-toggle="modal" data-bs-target="#removeAdmin-{{profile.user.id}}" class="btn btn-round btn-dim btn-danger">حذف</a>
+                                            {% else %} 
+                                            <input data-bs-toggle="modal" data-bs-target="#removeAdmin-{{profile.user.id}}" class="btn btn-round btn-dim btn-danger" type="submit" value="حذف" disabled>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--modal delete admin start-->
+                                <div class="modal fade" tabindex="-1" id="removeAdmin-{{profile.user.id}}">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <a href="#" class="close" data-bs-dismiss="modal"><em class="icon ni ni-cross"></em></a>
+                                            <div class="modal-body modal-body-lg text-center">
+                                                <div class="nk-modal">
+                                                    <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-alert bg-danger"></em>
+                                                    <h4 class="nk-modal-title">توجه کنید!</h4>
+                                                    <div class="nk-modal-text">
+                                                        <div class="caption-text"> آیا مطمئن هستید که<span class="fw-bold"> {{profile.user.name}} {{profile.user.last_name}} </span> را به کاربر معمولی تبدیل کنید ؟</div>
+                                                    </div>
+                                                    <form method="POST">
+                                                        {% csrf_token %}
+                                                        <div class="nk-modal-action">
+                                                            <input type="hidden" value="{{profile.user.id}}" name="user">
+                                                            <input type="hidden" value="{{profile.user.id}}" name="title">
+                                                            <button class="btn btn-lg btn-mw btn-primary">حذف</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--modal delete admin end-->
+                            {% endif %}
+
+
+                        
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- .nk-block -->
+                <div class="nk-add-product toggle-slide toggle-slide-right" data-content="addProduct" data-toggle-screen="any" data-toggle-overlay="true" data-toggle-body="true" data-simplebar>
+                    <div class="nk-block-head">
+                        <div class="nk-block-head-content">
+                            <h5 class="nk-block-title">اضافه کردن ادمین</h5>
+                            <div class="nk-block-des">
+                                <p>کاربر مورد نظر را انتخاب کنید و آن را اضافه کنید.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- .nk-block-head -->
+                    <div class="nk-block">
+                        <div class="row g-3">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label class="form-label">نام کاربر</label>
+                                        <div class="form-control-wrap">
+                                            <select class="form-select js-select2" data-search="on" id="{{appointment.id}}" name='user'>
+                                                {% for profile in profiles %}
+                                                    {% if profile.level == "1" %}
+                                                        <option value="{{profile.user.id}}" >{{profile.user.name}} {{profile.user.last_name}} -- ({{profile.user.username}})</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="form-label" for="regular-price">عنوان</label>
+                                        <div class="form-control-wrap">
+                                            <input type="text" class="form-control" id="regular-price" required  name='title' />
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 mt-2">
+                                    <button class="btn btn-primary"><em class="icon ni ni-plus"></em><span>افزودن جدید</span></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- .nk-block -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

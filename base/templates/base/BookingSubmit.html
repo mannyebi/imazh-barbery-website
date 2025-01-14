@@ -1,0 +1,149 @@
+{% extends "main.html" %}
+{% load jformat %}
+{% load custom_tags %}
+{% block appointmentPage %}active{% endblock appointmentPage %}
+{% block content %}
+  <!-- ================ start banner area ================= -->
+<section class="banner-area pricing" id="pricing">
+    <div class="container h-100">
+        <div class="banner-area__content text-center">
+            <h1>نهایی کردن نوبت</h1>
+        </div>
+    </div>
+</section>
+<!-- ================ end banner area ================= --> 
+
+
+<!-- ================ pricing section start ================= -->      
+<section class="section-margin--large" dir="rtl">
+    <div class="container">
+        <div class="section-intro pb-70px">
+            <h4 class="section-intro__title">برای تاریخ {{daytoshow|jformat:"%A %d %B"}}</h4>
+            <h3 class="section-intro__subtitle">یک تایم را انتخاب کنید</h3>
+        </div>
+        <form method="POST">
+          {% csrf_token %}
+            <div class="row gutters-48">
+                {% for time in times %}
+                <div class="col-lg-4 col-md-6 mb-5 pb-xl-4">
+                    <div class="card text-center card-pricing border-style">
+                        <div class="mb-5"> 
+                            <a type='submit' href="#popup{{time}}" class="button button-pricing" >{{time|import12to24}}</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="popup{{time}}" class="overlay">
+                    <div class="popup" >
+                      <a class="close" href="#">&times;</a>
+                      <div style="margin: 15px;" class="content">
+                        <h6>نوبت برای {{time|import12to24}} ثبت شود ؟</h6>
+                        <button class="yes" name="time" value="{{time}}">بله</button>
+                      </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+        
+</section>
+
+
+<style>
+
+
+    .overlay {
+        z-index: 10000;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        transition: opacity 500ms;
+        visibility: hidden;
+        opacity: 0;
+    }
+    .overlay:target {
+        
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .popup .content{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popup {
+        margin: 20% auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 5px;
+        width: 30%;
+        position: relative;
+        transition: all 1s ease-in-out;
+    }
+    
+    .popup h2 {
+      margin-top: 0;
+      color: #333;
+      font-family: Tahoma, Arial, sans-serif;
+    }
+    .popup .close {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      transition: all 200ms;
+      font-size: 30px;
+      font-weight: bold;
+      text-decoration: none;
+      color: #333;
+    }
+    .popup .close:hover {
+      color: #06D85F;
+    }
+    .popup .content {
+      max-height: 30%;
+      overflow: auto;
+    }
+
+    .yes{
+        margin: 5px 0;
+        outline: 0;
+        cursor: pointer;
+        border: none;
+        padding: 0 56px;
+        height: 45px;
+        line-height: 45px;
+        border-radius: 7px;
+        border: solid 1px;
+        font-weight: 400;
+        font-size: 16px;
+        background: #fff;
+        color: #696969;
+        box-shadow: 0 4px 14px 0 rgb(0 0 0 / 10%);
+        transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease;
+        :hover{
+            background: rgba(255,255,255,0.9);
+            box-shadow: 0 6px 20px rgb(93 93 93 / 23%);
+        }
+    }
+    
+    
+                
+    
+    @media screen and (max-width: 700px){
+      .box{
+        width: 70%;
+      }
+      .popup{
+        width: 70%;
+      }
+    }
+    
+    </style>
+<!-- ================ pricing section end ================= -->    
+{% endblock content %}

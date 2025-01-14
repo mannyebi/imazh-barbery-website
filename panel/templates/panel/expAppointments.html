@@ -1,0 +1,200 @@
+{% extends "adminMain.html" %}
+{% block title %}نوبت های منقضی شده{% endblock title %}
+
+{% load jformat %}
+{% load static %}
+{% load custom_tags2 %}
+{% load custom_tags %}
+
+{% block js %}
+
+<script src="{% static 'assets/js/bundle.js' %} "></script>
+<script src="{% static 'assets/js/scripts.js' %} "></script>
+<script src="{% static 'assets/js/demo-settings.js' %} "></script>
+
+{% endblock js %}
+
+{% block content %}
+
+<div class="nk-content">
+    <div class="container-fluid">
+        <div class="nk-content-inner">
+            <div class="nk-content-body">
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        {% if messages %}
+                            // Create an empty array to store the messages
+                            var messagesArray = [];
+
+                            // Loop through each message and push it to the messagesArray
+                            {% for message in messages %}
+                                messagesArray.push("{{ message|safe }}");
+                            {% endfor %}
+
+                            // Join the messagesArray with line breaks
+                            var messageText = messagesArray.join("\n");
+
+                            // Display the SweetAlert modal with the messages
+                            Swal.fire({
+                                title: 'توجه',
+                                html: '<ul class="messages"><li>' + messageText + '</li></ul>',
+                                icon: 'warning'
+                            });
+                        {% endif %}
+                        
+                    });
+                    $(document).ready(function() {
+                        $('#day-select').change(function() {
+                            console.log('hi')
+                            var selectedDay = $(this).val();
+                            $.ajax({
+                                url: '{% url "get_free_times" %}',
+                                type: 'POST',
+                                dataType: 'json',
+                                data: {
+                                    day: selectedDay,
+                                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                                },
+                                success: function(response) {
+                                    var free_apps = response.free_apps;
+                                    $('#free-appointments').empty();
+                                    for (var i = 0; i < free_apps.length; i++) {
+                                        $('#free-appointments').append(`<option value="${free_apps[i]}" >` + free_apps[i] + '</option>');
+                                    }
+                                },
+                                error: function(xhr, errmsg, err) {
+                                    console.log(xhr.status + ": " + xhr.responseText);
+                                }
+                            });
+                        });
+                        
+                        
+                    });
+                </script>
+
+
+                <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between">
+                        <div class="nk-block-head-content">
+                            <h3 class="nk-block-title page-title">نوبت های منقضی شده</h3>
+                            <div class="nk-block-des text-soft">
+                                <p>{{now|jformat:"%A %d %B | %H:%M"}}</p>
+                            </div>
+                        </div>
+                        <!-- .nk-block-head-content -->
+                        <div class="nk-block-head-content">
+                            <div class="toggle-wrap nk-block-tools-toggle">
+                                <a href="#" class="btn btn-icon btn-trigger toggle-expand me-n1" data-target="more-options"><em class="icon ni ni-more-v"></em></a>
+                                <div class="toggle-expand-content" data-content="more-options">
+                                    <ul class="nk-block-tools g-3">
+                                        <li>
+                                            <div class="drodown">
+                                                <a href="#" class="dropdown-toggle dropdown-indicator btn btn-outline-light btn-white" data-bs-toggle="dropdown">فیلتر</a>
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <ul class="link-list-opt no-bdr">
+                                                        <li>
+                                                            <a href="{% url 'expAppointments' %}"><span>همه</span></a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{% url 'expAppointments' %}?t=True"><span>امروز</span></a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{% url 'expAppointments' %}?a=True"><span>فردا</span></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- .nk-block-head-content -->
+                    </div>
+                    <!-- .nk-block-between -->
+                </div>
+
+                <!-- .nk-block-head -->
+                <div class="nk-block">
+                    <div class="row g-gs">
+                        {% for appointment in page_obj %}
+                        <div class="col-md-6 col-xxl-3">
+                            <div class="card card-bordered pricing">
+                                {% if appointment.status == "free" %}
+                                <span class="pricing-badge badge bg-teal">فعال</span>
+                                {% else %}
+                                <span class="pricing-badge badge bg-danger">منقضی</span>
+                                {% endif %}
+                                <div class="pricing-head">
+                                    <div class="pricing-title">
+                                        <a href="{% url "Users_detail" appointment.user.id %}" style="color:var(--bs-heading-color)"><h4 class="card-title title">{{appointment.user.name}} {{appointment.user.last_name}}</h4></a>
+                                    </div>
+                                    <div class="card-text">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <span class="h4 fw-500">{{appointment.time|import12to24}}</span>
+                                                <span class="sub-text">ساعت</span>
+                                            </div>
+                                            <div class="col-6">
+                                                <span class="h6 fw-400">{{appointment.day|jformat:"%A %d %B"}}</span>
+                                                <span class="sub-text">روز نوبت</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pricing-body">
+                                    <ul class="pricing-features">
+                                        <li>
+                                            <span class="w-50">تلفن:</span>  
+                                            <span class="ms-auto fw-bold text-danger">{{appointment.user.username}}</span>
+                                        </li>
+                                    </ul>
+                                    <div class="pricing-action">
+                                        <a href="#" class="btn btn-dim btn-danger" >منقضی شد</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                         
+                        
+                        
+
+                        {% endfor %}
+                        
+                        <div class="card-inner">
+                            <div class="nk-block-between-md g-3">
+                                <div class="g">
+                                    <ul class="pagination justify-content-center justify-content-md-start">
+                                        {% if page_obj.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}"><em class="icon ni ni-chevrons-left"></em></a>
+                                        </li>
+                                        {% endif %}
+                                        
+                                        {% for num in page_obj.paginator.page_range %}
+                                            <li class="page-item{% if page_obj.number == num %} active{% endif %}">
+                                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                            </li>
+                                        {% endfor %}
+                                        {% if page_obj.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.next_page_number }}"><em class="icon ni ni-chevrons-right"></em></a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                    <!-- .pagination -->
+                                </div>
+                            </div>
+                            <!-- .nk-block-between -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

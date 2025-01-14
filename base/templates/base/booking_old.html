@@ -1,0 +1,23 @@
+{% extends "main.html" %}
+{% load static %}
+{% load jformat %}
+{% block appointmentPage %}active{% endblock appointmentPage %}
+{% block title %}نوبت گیری{% endblock title %}
+
+{% block content %}
+
+
+
+
+<form method="POST">
+  {% csrf_token %}
+
+  <div class='AllDays'>
+    {% for validateWeekday in validateWeekdays %}
+      <button type='submit' id='this' name='day' value="{{validateWeekday|date:'Y-m-d'}}">{{validateWeekday|jformat:"%A | %d %B"}}</button>
+    {% endfor %}
+  </div>
+</form>
+
+
+{% endblock content %}

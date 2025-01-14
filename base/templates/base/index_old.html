@@ -1,0 +1,159 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load jformat %}
+{% block title %}ایماژ{% endblock title %}
+
+{% block content %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div class="bg-item">
+  <h1>با ایماژ، خودتان را دوست بدارید</h1>
+  <button><a href="{% url 'booking' %}">رزرو نوبت</a></button>
+</div>
+<div id="bg"></div>
+<main>
+  <div class="container">
+    <div class="row">
+      <article class="staff">
+        <div class="staff-title">
+          <h1>کارکنان مجموعه ی ایماژ :</h1>
+        </div>
+          <div class="flexx">
+            {% for user in users %}
+            <div class="staff-content-item">
+              <img src="{{user.avatar.url}}" class="staff-content-item_img" />
+              <div class="staff-content-title">
+                <h3>{{user.user.name}} {{user.user.last_name}}</h3>
+                <p>
+                  {{user.bio|truncatechars:150}}
+                </p>
+                <button>مشاهده ی پروفایل</button>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <a href="#" class="scrool-down"
+          ><img src="{% static 'images/arrow-down.svg' %} " alt=""
+        /></a>
+        </div>
+      </article>
+    </div>
+    <div class="row">
+      <article class="tour">
+        <div class="tour-content">
+          <div class="tour-title">
+            <h1>تور مجازی سالن ایماژ</h1>
+            <p>
+              {{information.bio}}
+            </p>
+          </div>
+          <img src="{{information.tourImage.url}}" alt="" />
+          
+        </div>
+        
+      </article>
+      <a href="#" class="scrool-down"
+      ><img src="{% static 'images/arrow-down.svg' %}" alt=""
+    /></a>
+    </div>
+    <div class="row">
+      <article class="services">
+        <div class="services-title">
+          <h1>  خدمات</h1>
+        </div>
+        <div class="services-content">
+          <div class="services-content-item">
+            <img src="{% static 'images/photo_2023-08-19_15-43-47.jpg' %} " alt="" />
+            <div class="services-content-title">
+              <h3> کوتاهی و استایل مو</h3>
+              <p>
+                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.
+              </p>
+              <div class="box">
+              <span>رزرو</span>
+              </div>
+            </div>
+          </div>
+          <div class="services-content-item">
+            <img src="{% static 'images/photo_2023-08-19_15-45-16.jpg' %}" class="img-circle" alt="" />
+            <div class="services-content-title">
+              <h3> اصلاح صورت</h3>
+              <p>
+                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.
+              </p>
+              <div class="box">
+                <span>رزرو</span>
+                </div>
+            </div>
+          </div>
+          <div class="services-content-item">
+            <img src="{% static 'images/photo_2023-08-19_15-44-05.jpg' %} " alt="" />
+            <div class="services-content-title">
+              <h3> پاکسازی پوست</h3>
+              <p>
+                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.
+              </p>
+              <div class="box">
+                <span>رزرو</span>
+                </div>
+            </div>
+          </div>
+          <div class="services-content-item">
+            <img src="{% static 'images/photo_2023-08-19_15-45-16.jpg' %} " class="img-circle" alt="" />
+            <div class="services-content-title">
+              <h3>گریم داماد</h3>
+              <p>
+                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.
+              </p>
+              <div class="box">
+                <span>رزرو</span>
+                </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+    <div class="row">
+      <article class="skin">
+        <div class="skin-hair">
+          <h2>وبلاگ سلامت پوست و مو</h2>
+          <p>
+            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
+            استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله
+            در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد
+            نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.
+            کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان
+            جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را
+            برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در
+            زبان فارسی ایجاد کرد.
+          </p>
+        </div>
+        <div class="skin-item">
+
+          {% for blog in blogs %}
+            <div class="skin-item-product">
+              <img src="{{blog.image.url}}" alt="" />
+              <div class="skin-product-title">
+              <h2>{{blog.title}}</h2>
+              <p>
+                {{blog.body|truncatechars:90}}  
+              </p>
+              </div>
+            </div>
+          {% endfor %}
+
+        </div>
+      </article>
+    </div>
+  </div>
+</main>
+
+{% endblock content %}
+    
+

@@ -1,0 +1,42 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}ورود{% endblock title %}
+{% block content %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<main>
+  <div class="container">
+      <div class="row">
+          <div class="main-content">
+          
+          <div class="main-login">
+              <h1>ورود</h1>
+              <form method="POST">
+                  {% csrf_token %}
+                  <input type="text" name='otp'>
+                  <input type='submit'> 
+                  <!---<div class="phone">
+                      <input type="text" name='fname'  placeholder="نام">
+                      <input type="text" name='lname'  placeholder="نام خانوادگی">
+                      <input type='submit'>
+                  </div> -->
+          
+          
+                  <div class="btn-par">
+                      <a href="index8.html" class="btn"> ثبت کد</a>
+                      <a href="index7.html" class="btn-ret">درخواست مجدد</a>
+                  </div>
+              </form>
+          
+          </div>
+          </div>
+      </div>
+  </div>
+</main>
+
+{% endblock content %}

@@ -1,0 +1,27 @@
+{% extends "main.html" %}
+{% block title %}{{blog.title}}{% endblock title %}
+{% block content %}
+{% load static %}
+{% load custom_tags %}
+
+
+<div id="bg" style="background-image:url({{blog.image.url}})"></div>
+<div class="bg-item">
+  <h1>{{blog.title}}</h1>
+</div>
+<main>
+  <div class="container">
+    <div class="row">
+      <p class="main-p1">{{blog.body}}</p>
+    </div>
+      <div class="row">
+          <article class="tour">
+            <p class="date">{{blog.created|PersianTimesince}}</p>
+          </article>
+          <a href="#" class="scrool-down"
+        /></a>
+        </div>
+  </div>
+</main>
+
+{% endblock content %}

@@ -1,0 +1,30 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}ورود{% endblock title %}
+{% block content %}
+
+<main>
+  <div class="container">
+      <div class="row">
+          <div class="main-content">
+          
+          <div class="main-login">
+              <h1>ورود</h1>
+              <form method="POST">
+                  {% csrf_token %}
+                  <div class="phone">
+                      <input type="text" name='name' placeholder="نام">
+                      <input type="text" name='lastname' placeholder="نام خانوادگی">
+                      <input type='submit'>
+                  </div>
+          
+                  
+              </form>
+          
+          </div>
+          </div>
+      </div>
+  </div>
+</main>
+
+{% endblock content %}

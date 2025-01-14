@@ -1,0 +1,29 @@
+{% extends "main.html" %}
+{% load static %}
+{% load custom_tags %}
+{% block title %}نهایی کردن نوبت{% endblock title %}
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+<h4> ثبت کنید {{day}} نوبت خود را برای تاریخ </h4>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div>
+        {% for time in times %}
+            <button type='submit' name='time' value='{{time}}'>{{time|import12to24}}</button>
+        {% endfor %}
+    </div>
+
+</form>
+
+{% endblock content %}

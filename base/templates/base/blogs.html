@@ -1,0 +1,110 @@
+{% extends "main.html" %}
+{% load static %}
+{% load jformat %}
+{% block blogPage %}active{% endblock blogPage %}
+{% block content %}
+
+<section class="hero-banner">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="hero-banner__img">
+            <img class="img-fluid" src="{% static 'img/banner/hero-banner.png' %} " alt="">
+          </div>
+        </div>
+        <div class="col-md-6 pl-xl-4">
+          <div class="hero-banner__content">
+            <h1>در باره ی زیبایی بخوانید</h1>
+            <p>"بلاگ زیبایی" یک فضای مجازی جذاب است که به اشتراک گذاری نکات، راهکارها، و تجارب مرتبط با زیبایی و آرایش می‌پردازد. این فضا به ما امکان می‌دهد تا در دنیای پرتنوع زیبایی، از روش‌های مختلف مراقبت از پوست، آرایش، مد، و دیگر موارد مشابه بهره‌برداری کنیم</p>
+            <a id="send" class="button button-hero" href="{% url 'booking' %}">رزرو نوبت</a>
+            <a class="button button--transparent hero-banner__video" href="http://www.youtube.com/watch?v=0O2aH4XLbto">Intro Video</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  
+  <!--================Blog Categorie Area =================-->
+  <section class="blog_categorie_area">
+    <div class="container">
+      
+    </div>
+  </section>
+  <!--================Blog Categorie Area =================-->
+
+  <!--================Blog Area =================-->
+  <section class="blog_area">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-8">
+                  <div class="blog_left_sidebar">
+                    {% for blog in blogs %}
+                      <article class="row blog_item border-bottom">
+                          <div class="col-md-3">
+                              <div class="blog_info text-right">
+                                  <ul class="blog_meta list">
+                                      <li>
+                                          <a href="#">{{blog.created|jformat:"%A %d %B %Y"}}
+                                              <i class="lnr lnr-calendar-full"></i>
+                                          </a>
+                                      </li>
+                                  </ul>
+                              </div>
+                          </div>
+                          <div class="col-md-12">
+                              <div class="blog_post">
+                                  <img src="{{blog.image.url}}" alt="">
+                                  <div class="blog_details">
+                                      <a href="{% url 'BlogPage' blog.id %}">
+                                          <h2>{{blog.title}}</h2>
+                                      </a>
+                                      <p>{{blog.body|truncatechars:70}}</p>
+                                      <a class="button button-blog" href="{% url 'BlogPage' blog.id %}">خواندن</a>
+                                  </div>
+                              </div>
+                          </div>
+                      </article>
+                    {% endfor %}
+                      <nav class="blog-pagination justify-content-center d-flex">
+                          <ul class="pagination">
+                              <li class="page-item">
+                                  <a href="#" class="page-link" aria-label="Previous">
+                                      <span aria-hidden="true">
+                                          <span class="lnr lnr-chevron-left"></span>
+                                      </span>
+                                  </a>
+                              </li>
+                              <li class="page-item">
+                                  <a href="#" class="page-link">01</a>
+                              </li>
+                              <li class="page-item active">
+                                  <a href="#" class="page-link">02</a>
+                              </li>
+                              <li class="page-item">
+                                  <a href="#" class="page-link">03</a>
+                              </li>
+                              <li class="page-item">
+                                  <a href="#" class="page-link">04</a>
+                              </li>
+                              <li class="page-item">
+                                  <a href="#" class="page-link">09</a>
+                              </li>
+                              <li class="page-item">
+                                  <a href="#" class="page-link" aria-label="Next">
+                                      <span aria-hidden="true">
+                                          <span class="lnr lnr-chevron-right"></span>
+                                      </span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </nav>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+  <!--================Blog Area =================-->
+
+
+{% endblock content %}

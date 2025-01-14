@@ -1,0 +1,493 @@
+{% extends "adminMain.html" %}
+
+{% block title %}{{theuser.user.name}} {{theuser.user.last_name}}{% endblock title %}
+
+{% load static %}
+{% load jformat %}
+{% load humanize %}
+{% load custom_tags2 %}
+{% load custom_tags %}
+
+{% block js %}
+    <script src="{% static 'assets/js/bundle.js' %} "></script>
+    <script src="{% static 'assets/js/scripts.js' %} "></script>
+    <script src="{% static 'assets/js/demo-settings.js' %} "></script>
+{% endblock js %}
+
+
+
+{% block content %}
+
+<script>
+$(document).ready(function() {
+    $('#day-select').change(function() {
+        var selectedDay = $(this).val();
+        $.ajax({
+            url: '{% url "get_free_times" %}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                day: selectedDay,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(response) {
+                var free_apps = response.free_apps;
+                var show = response.show;
+                $('#free-appointments').empty();
+                for (var i = 0; i < free_apps.length; i++) {
+                    console.log(free_apps[i])
+                    $('#free-appointments').append(`<option value="${show[i]}" >` + free_apps[i] + '</option>');
+                }
+            },
+            error: function(xhr, errmsg, err) {
+                console.log(xhr.status + ": " + xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+
+<div class="nk-content mt-5">
+    <div class="container">
+        <div class="nk-content-inner">
+            <div class="nk-content-body">
+                <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between g-3">
+                        <div class="nk-block-head-content">
+                            <h3 class="nk-block-title page-title">
+                                مشخصات کاربر
+                            </h3>
+                            <div class="nk-block-des text-soft">
+                            </div>
+                        </div>
+                        <div class="nk-block-head-content">
+                            <a href="{% url 'users' %}" class="btn btn-outline-light bg-white d-none d-sm-inline-flex"><em class="icon ni ni-arrow-left"></em><span>بازگشت</span></a>
+                            <a href="{% url 'users' %}" class="btn btn-icon btn-outline-light bg-white d-inline-flex d-sm-none"><em class="icon ni ni-arrow-left"></em></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- .nk-block-head -->
+                <div class="nk-block">
+                    <div class="row g-gs">
+                        <div class="col-lg-4 col-xl-4 col-xxl-3">
+                            <div class="card">
+                                <div class="card-inner-group">
+                                    <div class="card-inner">
+                                        <div class="user-card user-card-s2">
+                                            <div class="user-avatar lg bg-primary">
+                                                <img src="{{theuser.avatar.url}}" alt="" />
+                                            </div>
+                                            <div class="user-info">
+                                                <div class="badge bg-light rounded-pill ucap">
+                                                    {% if theuser.level == "1" %}کاربر{% endif %}
+                                                    {% if theuser.level == "2" %}ادمین{% endif %}
+                                                    {% if theuser.level == "3" %}مدیر{% endif %}
+                                                </div>
+                                                <h5>{{theuser.user.name}} {{theuser.user.last_name}}</h5>
+                                                <button type="button" class="btn btn-dim btn-warning" data-bs-toggle="modal" data-bs-target="#modalUpdateInfo" >ویرایش اطلاعات</button>
+                                                <span class="sub-text text-success mt-1">{{theuser.user.username}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-inner card-inner-sm">
+                                        <ul class="btn-toolbar justify-center gx-1">
+                                            <li>
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#sendsmsto" class="btn btn-trigger btn-icon"><em class="icon ni ni-mail"></em></a>
+                                            </li>
+                                            <li>
+                                                {% if theuser.user.banned %}
+                                                    <a href="#" class="btn btn-trigger btn-icon text-teal" data-bs-toggle="modal" data-bs-target="#modalunbann-{{theuser.user.id}}"><em class="icon ni ni-check-thick"></em></a>
+                                                {% else %}
+                                                    <a href="#" class="btn btn-trigger btn-icon text-danger" data-bs-toggle="modal" data-bs-target="#modalbann-{{theuser.user.id}}"><em class="icon ni ni-na"></em></a>
+                                                {% endif %}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-inner">
+                                        <div class="row text-center">
+                                            <div class="col-6">
+                                                <div class="profile-stats">
+                                                    <span class="amount">{{theuser.num_appointments}}</span>
+                                                    <span class="sub-text">کل نوبت ها</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="profile-stats">
+                                                    <span class="amount">{{free_appointments.count}}</span>
+                                                    <span class="sub-text">تعداد نوبت فعال</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- .card-inner -->
+                                    <div class="card-inner">
+                                        <h6 class="overline-title mb-2">مشخصات کوتاه</h6>
+                                        <div class="row g-3">
+                                            <div class="col-sm-6 col-md-4 col-lg-12">
+                                                <span class="sub-text">شناسه کاربر:</span>
+                                                <span>{{theuser.user.id}}</span>
+                                            </div>
+                                            <div class="col-sm-6 col-md-4 col-lg-12">
+                                                <span class="sub-text">تلفن کاربر:</span>
+                                                <span>{{theuser.user.username}}</span>
+                                            </div>
+                                            <div class="col-sm-6 col-md-4 col-lg-12">
+                                                <span class="sub-text">آخرین نوبت:</span>
+                                                <span>{{theuser.latest_app|jformat:"%A %d %B"}}</span>
+                                            </div>
+                                            <div class="col-sm-6 col-md-4 col-lg-12">
+                                                <span class="sub-text">وضعیت مشتری:</span>
+                                                {% if theuser.user.banned %}<span class="lead-text text-danger">بن شده</span>{% else %}<span class="lead-text text-success">بن نشده</span>{% endif %}
+                                            </div>
+                                            <div class="col-sm-6 col-md-4 col-lg-12">
+                                                <span class="sub-text">ثبت نام در:</span>
+                                                <span>{{theuser.user.created|jformat:"%d %B %Y"}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- .card-inner -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- .col -->
+                        <div class="col-lg-8 col-xl-8 col-xxl-9">
+                            <div class="card">
+                                <div class="card-inner">
+                                    <div class="nk-block">
+                                        <div class="overline-title-alt mb-2 mt-2">
+                                            درآمد ایجاد کرده
+                                        </div>
+                                        <div class="profile-balance">
+                                            <div class="profile-balance-group gx-4">
+                                                <div class="profile-balance-sub">
+                                                    <div class="profile-balance-amount">
+                                                        <div class="number">
+                                                            {{all_appointments.count|multiply:200000|intcomma}}
+                                                            <small class="currency currency-usd">تومان</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="nk-block">
+                                        <h6 class="lead-text mb-3">نوبت های اخیر</h6>
+                                        <div class="nk-tb-list nk-tb-ulist is-compact card">
+                                            <div class="nk-tb-item nk-tb-head">
+                                                <div class="nk-tb-col">
+                                                    <span class="sub-text">شناسه نوبت</span>
+                                                </div>
+                                                <div class="nk-tb-col tb-col-sm">
+                                                    <span class="sub-text">تاریخ نوبت</span>
+                                                </div>
+                                                <div class="nk-tb-col tb-col-sm">
+                                                    <span class="sub-text">تایم نوبت</span>
+                                                </div>
+                                                <div class="nk-tb-col">
+                                                    <span class="sub-text">تا نوبت</span>
+                                                </div>
+                                                <div class="nk-tb-col">
+                                                    <span class="sub-text">وضعیت</span>
+                                                </div>
+                                            </div>
+                                            {% for appointment in all_appointments %}
+                                            <div class="nk-tb-item">
+                                                <div class="nk-tb-col">
+                                                    <a href="{{appointment.user.id}}"><span class="fw-bold">{{appointment.id}}</span></a>
+                                                </div>
+                                                <div class="nk-tb-col tb-col-sm">
+                                                    <span class="tb-product">
+                                                        <img src="./images/product/c.png" alt=""  />
+                                                        <span class="title">{{appointment.day|jformat:"%A %d %B"}}</span>
+                                                    </span>
+                                                </div>
+                                                <div class="nk-tb-col tb-col-sm">
+                                                    <span class="tb-product">
+                                                        <img src="./images/product/c.png" alt=""  />
+                                                        <span class="title">{{appointment.time|import12to24}}</span>
+                                                    </span>
+                                                </div>
+                                                {% if appointment.status == "free" %}
+                                                <div class="nk-tb-col">
+                                                    <span class="sub-text">{{appointment.time_difference|hour_minutes}}</span>
+                                                </div>
+                                                <div class="nk-tb-col">
+                                                    <span class="lead-text text-success">فعال</span>
+                                                </div>
+                                                {% else %}
+                                                <div class="nk-tb-col">
+                                                    <span class="sub-text">-</span>
+                                                </div>
+                                                <div class="nk-tb-col">
+                                                    <span class="lead-text text-danger">منقضی</span>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        <!-- .nk-tb-list -->
+                                    </div>
+                                    <div class="nk-block">
+                                        <h6 class="lead-text mb-3">نوبت های فعال</h6>
+                                        <div class="row g-3">
+                                            {% for appointment in free_appointments %}
+                                                <div class="col-xl-12 col-xxl-6">
+                                                    <div class="card">
+                                                        <div class="card-inner">
+                                                            <div class="d-flex align-items-center justify-content-between">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="icon-circle icon-circle-lg">
+                                                                        <em class="icon ni ni-clock"></em>
+                                                                    </div>
+                                                                    <div class="ms-3">
+                                                                        <h6 class="lead-text">
+                                                                            {{appointment.day|jformat:"%A %d %B"}} -
+                                                                            <span class="text-medium ml-1">{{appointment.time|import12to24}}</span>
+                                                                        </h6>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+
+
+                                            <!--modal sendsms to specific user start-->
+                                            <div class="modal fade" id="sendsmsto">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">ارسال پیامک به {{theuser.user.name}} {{theuser.user.last_name}}</h5>
+                                                            <a href="#" class="close" data-bs-dismiss="modal" aria-label="بستن">
+                                                                <em class="icon ni ni-cross"></em>
+                                                            </a>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="POST" action="{% url 'send_sms_to_users' theuser.user.id %}" class="form-validate is-alter">
+                                                                {% csrf_token %}
+                                                                <div class="form-group">
+                                                                    <label class="form-label" for="default-textarea">متن پیامک :</label>
+                                                                    <div class="form-control-wrap">
+                                                                        <textarea class="form-control no-resize" name="text" id="default-textarea"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="form-label" for="email-address">ارسال به :</label>
+                                                                    <div class="form-control-wrap">
+                                                                        <input type="text" class="form-control" value="{{theuser.user.name}} {{theuser.user.last_name}} | {{theuser.user.username}}" id="email-address" disabled required />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <button type="submit" class="btn btn-lg btn-primary">ارسال</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer bg-light">
+                                                            <span class="sub-text">ایماژ</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--modal send sms to specific user end-->
+                                             
+
+
+                                            <!-- .col -->
+                                            <div class="col-xl-12 col-xxl-6">
+                                                <button class="h-100 w-100 bg-white card round-sm p-4 d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#modalAddAppointment">
+                                                    <span class="text-soft">افزودن نوبت جدید</span>
+                                                </button>
+                                            </div>
+
+
+
+                                            <!--modal bann start-->
+                                                <div class="modal fade" tabindex="-1" id="modalbann-{{theuser.user.id}}">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <a href="#" class="close" data-bs-dismiss="modal"><em class="icon ni ni-cross"></em></a>
+                                                            <div class="modal-body modal-body-lg text-center">
+                                                                <form method="POST" action="{% url 'bannUser' theuser.user.id %}">
+                                                                {% csrf_token %}
+                                                                <div class="nk-modal">
+                                                                    <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-alert bg-warning"></em>
+                                                                    <h4 class="nk-modal-title">توجه کنید!</h4>
+                                                                    <div class="nk-modal-text">
+                                                                        <div class="caption-text">آیا مطمئن هستید که <span class="fw-bold">{{theuser.user.name}} {{theuser.user.last_name}}</span> را بن کنید؟</div>
+                                                                    </div>
+                                                                    <div class="nk-modal-action">
+                                                                        <button type="submti" class="btn btn-lg btn-mw btn-primary">بله</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- .modal-body -->
+                                                            <div class="modal-footer bg-lighter">
+                                                                <div class="text-center w-100">
+                                                                    <p>بعدا میتوانید  {{theuser.user.name}} {{theuser.user.last_name}} را آنبن کنید</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                             <!--modal bann end-->
+
+                                             <!--modal unbann start-->
+                                                <div class="modal fade" tabindex="-1" id="modalunbann-{{theuser.user.id}}">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <a href="#" class="close" data-bs-dismiss="modal"><em class="icon ni ni-cross"></em></a>
+                                                            <div class="modal-body modal-body-lg text-center">
+                                                                <form method="POST" action='{% url "bannUser" user.id %}'>
+                                                                    {% csrf_token %}
+                                                                    <div class="nk-modal">
+                                                                        <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-alert bg-warning"></em>
+                                                                        <h4 class="nk-modal-title">توجه کنید!</h4>
+                                                                        <div class="nk-modal-text">
+                                                                            <div class="caption-text">آیا مطمئن هستید که <span class="fw-bold">{{theuser.user.name}} {{theuser.user.last_name}}</span> را آنبن کنید؟</div>
+                                                                        </div>
+                                                                        <div class="nk-modal-action">
+                                                                            <button type='submit' class="btn btn-lg btn-mw btn-primary">بله</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <!--modal unbann end-->
+
+                                            <!--modal add appointment start-->
+                                            <div class="modal fade" id="modalAddAppointment">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">اطلاعات کاربر</h5>
+                                                            <a href="#" class="close" data-bs-dismiss="modal" aria-label="بستن">
+                                                                <em class="icon ni ni-cross"></em>
+                                                            </a>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form action='{% url "AddAppointment" %}' method="POST" class="form-validate is-alter">
+                                                                {% csrf_token %}
+                                                                <div class="form-group">
+                                                                    <label class="form-label">نام کاربر</label>
+                                                                    <div class="form-control-wrap">
+                                                                        <select class="form-select js-select2" name="user">
+                                                                            <option value="{{theuser.user.id}}" >{{theuser.user.name}} {{theuser.user.last_name}} -- ({{theuser.user.username}})</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="form-label" for="email-address">روز نوبت</label>
+                                                                    <div class="form-control-wrap" >
+                                                                        <select class="form-select js-select2" id="day-select" name="day">
+                                                                            <option value="#" >انتخاب کنید</option>
+                                                                            {% for day in validateWeekdays %}
+                                                                                <option value="{{day|date:'Y-m-d'}}" >{{day|jformat:"%A | %d %B"}}</option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="form-label">ساعت</label>
+                                                                    <div class="form-control-wrap">
+                                                                        <select class="form-select js-select2" id="free-appointments" name='time'>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="form-label">ارتباط</label>
+                                                                    <ul class="custom-control-group g-3 align-center">
+                                                                        <li>
+                                                                            <div class="custom-control custom-control-sm custom-checkbox">
+                                                                                <input type="checkbox" class="custom-control-input" id="com-sms" />
+                                                                                <label class="custom-control-label" for="com-sms">پیامک</label>
+                                                                            </div>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <button type="submit" class="btn btn-lg btn-primary"> ثبت نوبت</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer bg-light">
+                                                            <span class="sub-text">ایماژ</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                         <!--modal add appointment end-->
+
+
+                                         <!-- Modal update info -->
+                                            <div class="modal fade" id="modalUpdateInfo">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">اطلاعات مشتری</h5>
+                                                            <a href="#" class="close" data-bs-dismiss="modal" aria-label="بستن">
+                                                                <em class="icon ni ni-cross"></em>
+                                                            </a>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="POST" action="{% url 'User_edit' theuser.user.id %}" class="form-validate is-alter" enctype="multipart/form-data">
+                                                                {% csrf_token %}
+                                                                <div class="form-group">
+                                                                    <label class="form-label" for="full-name">نام </label>
+                                                                    <div class="form-control-wrap">
+                                                                        <input type="text" class="form-control" id="full-name" name="name" value="{{theuser.user.name}}" required />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="form-label" for="full-name">نام خانوادگی</label>
+                                                                    <div class="form-control-wrap">
+                                                                        <input type="text" class="form-control" id="full-name" name="last_name" value="{{theuser.user.last_name}}" required />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="form-label" for="full-name">آواتار</label>
+                                                                    <div class="form-control-wrap">
+                                                                        <input type="file" class="form-control" id="full-name" name="avatar"  required />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="form-label" for="phone-no">شماره تلفن</label>
+                                                                    <div class="form-control-wrap">
+                                                                        <input type="text" class="form-control" id="phone-no" value="{{theuser.user.username}}" disabled/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <button type="submit" class="btn btn-lg btn-primary">ذخیره اطلاعات</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer bg-light">
+                                                            <span class="sub-text">ایماژ</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <!-- .col -->
+                                        </div>
+                                        <!-- .row -->
+                                    </div>
+                                </div>
+                                <!-- .card-inner -->
+                            </div>
+                            <!-- .card -->
+                        </div>
+                        <!-- .col -->
+                    </div>
+                    <!-- .row -->
+                </div>
+                <!-- .nk-block -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

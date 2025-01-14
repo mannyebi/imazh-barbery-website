@@ -1,0 +1,41 @@
+{% extends "main.html" %}
+{% load jformat %}
+{% block appointmentPage %}active{% endblock appointmentPage %}
+{% block content %}
+  <!-- ================ start banner area ================= -->
+<section class="banner-area pricing" id="pricing">
+    <div class="container h-100">
+        <div class="banner-area__content text-center">
+            <h1>رزرو نوبت</h1>
+        </div>
+    </div>
+</section>
+<!-- ================ end banner area ================= --> 
+
+
+<!-- ================ pricing section start ================= -->      
+<section class="section-margin--large" dir="rtl">
+    <div class="container">
+        <div class="section-intro pb-70px">
+            <h4 class="section-intro__title">روز های قابل رزرو</h4>
+            <h3 class="section-intro__subtitle">یکی از روز ها را انتخاب کنید</h3>
+        </div>
+        <form method="POST">
+          {% csrf_token %}
+            <div class="row gutters-48">
+                {% for validateWeekday in validateWeekdays %}
+                <div class="col-lg-4 col-md-6 mb-5 pb-xl-4">
+                    <div class="card text-center card-pricing border-style">
+                        <div class="mb-5">
+                            <button type='submit' class="button button-pricing" name="day" value="{{validateWeekday|date:'Y-m-d'}}">{{validateWeekday|jformat:"%A %d %B"}}</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+        
+</section>
+<!-- ================ pricing section end ================= -->    
+{% endblock content %}

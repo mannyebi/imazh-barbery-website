@@ -1,0 +1,31 @@
+{% extends "main.html" %}
+{% block title %}ایماژ آکادمی{% endblock title %}
+{% block academyPage %}active{% endblock academyPage %}
+{% load static %}
+{% block content %}
+
+<section class="banner-area contact" id="contact">
+    <div class="container h-100">
+        <div class="banner-area__content text-center">
+            <h1>ایماژ آکادمی</h1>
+            <nav aria-label="breadcrumb" class="banner-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'indexPage' %}">خانه</a></li>
+                <li class="breadcrumb-item active" aria-current="page">آکادمی</li>
+            </ol>
+            </nav>
+        </div>
+    </div>
+</section>
+
+
+<section class="blog_area single-post-area py-80px section-margin pt-xl-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 posts-list ">
+                <h1>... به زودی</h1>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

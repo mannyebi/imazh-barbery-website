@@ -1,0 +1,314 @@
+{% extends "adminMain.html" %}
+
+{% load static %}
+{% load jformat %}
+
+
+{% block title %}بلاگ ها{% endblock title %}
+
+{% block js %}
+    <script src="{% static 'assets/js/bundle.js' %} "></script>
+    <script src="{% static 'assets/js/scripts.js' %} "></script>
+    <script src="{% static 'assets/js/demo-settings.js' %} "></script>
+    <link rel="stylesheet" href="{% static 'assets/css/editors/summernote.rtl.css' %}" />
+    <script src="{% static 'assets/js/libs/editors/summernote.js' %}"></script>
+    <script src="{% static 'assets/js/editors.js' %}"></script>
+
+{% endblock js %}
+
+{% block content %}
+
+
+
+<div class="nk-content">
+    <div class="container-fluid">
+        <div class="nk-content-inner">
+            <div class="nk-content-body">
+
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        {% if messages %}
+                            // Create an empty array to store the messages
+                            var messagesArray = [];
+
+                            // Loop through each message and push it to the messagesArray
+                            {% for message in messages %}
+                                messagesArray.push("{{ message|safe }}");
+                            {% endfor %}
+
+                            // Join the messagesArray with line breaks
+                            var messageText = messagesArray.join("\n");
+
+                            // Display the SweetAlert modal with the messages
+                            Swal.fire({
+                                title: 'توجه',
+                                html: '<ul class="messages"><li>' + messageText + '</li></ul>',
+                                icon: 'warning'
+                            });
+                        {% endif %}
+                    });
+                </script>
+
+
+                <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between g-3">
+                        <div class="nk-block-head-content">
+                            <h3 class="nk-block-title page-title">بلاگ ها</h3>
+                            <!--<div class="nk-block-des text-soft">
+                                <p>
+                                    شما در مجموع <span class="text-base">{{page_obj.count}}</span> بلاگ دارید.
+                                </p>
+                            </div>-->
+                        </div>
+                        <div class="nk-block-head-content">
+                            <div class="toggle-wrap nk-block-tools-toggle">
+                                <a href="#" class="btn btn-icon btn-trigger toggle-expand me-n1" data-target="more-options"><em class="icon ni ni-more-v"></em></a>
+                                <div class="toggle-expand-content" data-content="more-options">
+                                    <ul class="nk-block-tools g-3">
+                                        <li class="nk-block-tools-opt">
+                                            <a href="#" class="btn btn-icon btn-primary d-md-none"><em class="icon ni ni-plus"></em></a>
+                                            <button type="button" class="btn btn-primary d-none d-md-inline-flex" data-bs-toggle="modal" data-bs-target="#modalAddblog"><em class="icon ni ni-plus"></em><span>افزودن بلاگ</span></button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- .nk-block-head -->
+                <div class="nk-block">
+                    <div class="row g-gs">
+
+                        {% for blog in page_obj %}
+                        <div class="col-sm-6 col-lg-4 col-xxl-3">
+                            <div class="gallery card">
+                                <a class="gallery-image popup-image ratio ratio-1x1" href="{{blog.image.url}}">
+                                    <img class="w-100 rounded-top ratio ratio-1x1" src="{{blog.image.url}}" alt="" />
+                                </a>
+                                <div class="gallery-body card-inner align-center justify-between flex-wrap g-2">
+                                    <div class="user-card">
+                                        <div class="user-avatar">
+                                            <img src="{{blog.image.url}}" alt="" />
+                                        </div>
+                                        <div class="user-info">
+                                            <span class="lead-text">{{blog.title}}</span>
+                                            <span class="sub-text">{{blog.created|jformat:"%A %d %B"}}</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <a href="#" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUpdateBlog-{{blog.id}}">آپدیت</a>
+                                        <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modaldeleteblog-{{blog.id}}">حذف</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!--modal delete blog start-->
+                        <div class="modal fade" tabindex="-1" id="modaldeleteblog-{{blog.id}}">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <a href="#" class="close" data-bs-dismiss="modal"><em class="icon ni ni-cross"></em></a>
+                                    <div class="modal-body modal-body-lg text-center">
+                                        <div class="nk-modal">
+                                            <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-alert bg-danger"></em>
+                                            <h4 class="nk-modal-title">توجه کنید!</h4>
+                                            <div class="nk-modal-text">
+                                                <div class="caption-text">آیا مطمئن هستید که میخواهید بلاگ <span class='fw-bold'>{{blog.title}}</span> را حذف کنید ؟ </div>
+                                            </div>
+                                            <form method="POST" action='{% url "deleteBlog" blog.id %}'>
+                                                {% csrf_token %}
+                                                <div class="nk-modal-action">
+                                                    <button class="btn btn-lg btn-mw btn-primary">بله</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--modal delete blog end-->
+
+
+                        <!--modal update blog start-->
+                        <div class="modal modal-xl modal-body-xl fade" id="modalUpdateBlog-{{blog.id}}">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">آپدیت بلاگ {{blog.title}}</h5>
+                                        <a href="#" class="close" data-bs-dismiss="modal" aria-label="بستن">
+                                            <em class="icon ni ni-cross"></em>
+                                        </a>
+                                    </div>
+                                    <div class="modal-body">
+                                        
+                                        <form method="POST" class="form-validate is-alter" action="{% url 'UpdateBlogs' blog.id %}"  enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label class="form-label" for="default-01">عنوان بلاگ</label>
+                                                <div class="form-control-wrap">
+                                                    <input type="text" class="form-control" name="title" id="default-01" value="{{blog.title}}"  required/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label" for="default-textarea">بدنه بلاگ</label>
+                                                <div class="form-control-wrap">
+                                                    <textarea class="form-control no-resize" name="body" id="blogUpdate-{{blog.id}}" required>{{blog.body}}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="image">عکس فعلی:</label>
+                                                {% if blog.image %}
+                                                    <img src="{{ blog.image.url }}" class="w-50 rounded-top ratio ratio-1x1" alt="Current Image" class="img-fluid">
+                                                {% else %}
+                                                    عکسی آپلود نشده است
+                                                {% endif %}
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label" for="default-06">عکس بلاگ</label>
+                                                <div class="form-control-wrap">
+                                                    <div class="form-file">
+                                                        <input type="file"  class="form-file-input"  name="image" value="{{blog.image}}"/>
+                                                        <label class="form-file-label" for="customFile">انتخاب فایل</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-lg btn-primary"> ثبت بلاگ</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer bg-light">
+                                        <span class="sub-text">ایماژ</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--modal update blog end-->
+
+
+
+                        <script>
+
+                            $(document).ready(function() {
+                                $('#blogUpdate-{{blog.id}}').summernote({
+                                    toolbar: [
+                                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                                    ['font', ['strikethrough', 'fontsize']],
+                                    ['para', ['ul', 'ol', 'paragraph']],
+                                    ['color', ['forecolor', 'backcolor']],
+                                    ['Misc', ['fullscreen', 'undo']],
+                                ]
+                                });
+                            });
+                        
+                        </script>
+                        
+                        
+                        {% endfor %}
+
+                        
+
+
+                        <!--modal add appointment start-->
+                        <div class="modal modal-xl modal-body-xl fade" id="modalAddblog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">اطلاعات بلاگ</h5>
+                                        <a href="#" class="close" data-bs-dismiss="modal" aria-label="بستن">
+                                            <em class="icon ni ni-cross"></em>
+                                        </a>
+                                    </div>
+                                    <div class="modal-body">
+                                        
+                                        <form method="POST" class="form-validate is-alter"  enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label class="form-label" for="default-01">عنوان بلاگ</label>
+                                                <div class="form-control-wrap">
+                                                    <input type="text" class="form-control" name="title" id="default-01" placeholder=""  required/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label" for="default-textarea">بدنه بلاگ</label>
+                                                <div class="form-control-wrap">
+                                                    <textarea class="form-control no-resize" name="body" id="addBlog" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label" for="default-06">عکس بلاگ</label>
+                                                <div class="form-control-wrap">
+                                                    <div class="form-file">
+                                                        <input type="file"  class="form-file-input"  name="image" required/>
+                                                        <label class="form-file-label" for="customFile">انتخاب فایل</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-lg btn-primary"> ثبت بلاگ</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer bg-light">
+                                        <span class="sub-text">ایماژ</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--modal delete user end-->
+                        <div class="card-inner">
+                            <div class="nk-block-between-md g-3">
+                                <div class="g">
+                                    <ul class="pagination justify-content-center justify-content-md-start">
+                                        {% if page_obj.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}"><em class="icon ni ni-chevrons-left"></em></a>
+                                        </li>
+                                        {% endif %}
+                                        {% for num in page_obj.paginator.page_range %}
+                                            <li class="page-item{% if page_obj.number == num %} active{% endif %}">
+                                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                            </li>
+                                        {% endfor %}
+                            
+                                        {% if page_obj.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.next_page_number }}"><em class="icon ni ni-chevrons-right"></em></a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                    <!-- .pagination -->
+                                </div>
+                            </div>
+                            <!-- .nk-block-between -->
+                        </div>
+
+                        <script>
+
+                            $(document).ready(function() {
+                                $('#addBlog').summernote({
+                                    toolbar: [
+                                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                                    ['font', ['strikethrough', 'fontsize']],
+                                    ['para', ['ul', 'ol', 'paragraph']],
+                                    ['color', ['forecolor', 'backcolor']],
+                                    ['Misc', ['fullscreen', 'undo']],
+                                ]
+                                });
+                            });
+                        
+                        </script>
+
+                    </div>
+                </div>
+                <!-- .nk-block -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}

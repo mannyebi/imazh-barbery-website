@@ -1,0 +1,188 @@
+{% extends "main.html" %}
+{% load static %}
+{% load jformat %}
+{% block mainPage %}active{% endblock mainPage %}
+{% block content %}
+
+
+<main class="site-main">
+    <!-- ================ start hero banner Area ================= -->    
+    <section class="hero-banner">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="hero-banner__img">
+              <img class="img-fluid" src="{% static 'img/banner/hero-banner.png' %} " alt="">
+            </div>
+          </div>
+          <div class="col-md-6 pl-xl-4">
+            <div class="hero-banner__content">
+              <h1>ایماژ  تحقق یک رویا</h1>
+              <p>خودش ممکن است با خودش بیاید، پنجمین از حکومت کسی که آفریده شده است، بیشتر را بیاورد. خودش ممکن است با خودش بیاید، پنجم از حکومت کسی که هیچ ارزیابی بازاری ندارد.</p>
+              <a id="send" class="button button-hero" href="{% url 'booking' %}">رزرو نوبت</a>
+              <a class="button button--transparent hero-banner__video" href="http://www.youtube.com/watch?v=0O2aH4XLbto">تور مجازی</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ================ end hero banner Area ================= -->    
+
+
+    <!-- ================ start about section ================= -->    
+    <section class="section-margin about-wrapper">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-5 mb-5 mb-lg-0">
+            <div class="about__content">
+              <div class="section-intro">
+                <h4 class="section-intro__title">آکادمی ایماژ</h4>
+                <h2 class="section-intro__subtitle">ما هنرمندیم، موها نقاشی‌هایمان هستند.</h2>
+              </div>
+              <p>لورم ایپسوم یک متن دستوری استاندارد است که برای پر کردن صفحات و طراحی در صنعت چاپ و صفحه آرایی استفاده می شود. این متن از قرن 16 میلادی به وجود آمد و از آن زمان برای طراحی گرافیکی و چاپ استفاده شده است. لورم ایپسوم در واقع متنی بی معنی است که از کلمات لاتین انتخاب شده و به صورت تصادفی در کنار هم قرار گرفته است</p>
+              <a class="button" href="{% url 'academy' %}">آکادمی ایماژ</a>
+            </div>
+          </div>
+          <div class="col-lg-5 offset-lg-2">
+            <div class="about__img">
+              <img class="img-fluid" src="{% static 'img/home/barber-frame.png' %} " alt="">
+              <img src="{% static 'img/home/barber-work.png' %} " alt="" class="about__img--small img-fluid">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ================ end about section ================= -->    
+
+    
+    <!-- ================ start feature section ================= -->    
+    <section class="section-margin--large">
+      <div class="container">
+        <div class="section-intro pb-70px">
+          <h4 class="section-intro__title">ایماژ سالن</h4>
+          <h2 class="section-intro__subtitle">تخصص ما <span class="d-block">زیبایی شماست</span></h2>
+        </div>
+
+        <div class="row gutters-48">
+          <div class="col-md-6 col-xl-3 mb-5 mb-xl-0">
+            <div class="card text-center card-feature border-style">
+              <div class="card-feature__icon"><i class="flaticon-barber-chair"></i></div>
+              <h3 class="card-feature__title">لاین تتو</h3>
+              <p>در سالن زیبایی و تتوی ما، هنر از روی پوست زنده می‌شود؛ جایی که تغییرات شما به دلیل قلم و هنر ما، به یک داستان زیبا تبدیل می‌شود</p>
+            </div>
+          </div>
+          
+          <div class="col-md-6 col-xl-3 mb-5 mb-xl-0">
+            <div class="card text-center card-feature border-style">
+              <div class="card-feature__icon"><i class="flaticon-cut"></i></div>
+              <h3 class="card-feature__title">لاین اصلاح</h3>
+              <p>در اصلاح سر و صورت، هر فرم سر یک داستان دارد؛ ما آن را با مدل موی منحصر به فردتان ایجاد می‌کنیم</p>
+            </div>
+          </div>
+          
+          <div class="col-md-6 col-xl-3 mb-5 mb-xl-0">
+            <div class="card text-center card-feature border-style">
+              <div class="card-feature__icon"><i class="flaticon-mirror"></i></div>
+              <h3 class="card-feature__title">لاین پاکسازی</h3>
+              <p>در خدمت پاکسازی پوست، هر پوست یک کتاب است که ما آن را با نگاهی دقیق و محصولات مخصوص به روز زیبا و پاکیزه می‌نماییم</p>
+            </div>
+          </div>
+          
+          <div class="col-md-6 col-xl-3 mb-5 mb-xl-0">
+            <div class="card text-center card-feature border-style">
+              <div class="card-feature__icon"><i class="flaticon-barbershop"></i></div>
+              <h3 class="card-feature__title">لاین داماد</h3>
+              <p>در لاین داماد، هر مرد دارایی منحصر به فرد است؛ ما با زیبایی‌هایی که برای آنها ایجاد می‌کنیم، آنها را بهترین نسخه از خودشان می‌سازیم.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ================ end feature section ================= -->    
+
+
+    <!-- ================ video section start ================= --> 
+    <section class="video-area section-margin--large">
+      <div class="container">
+        <div class="row justify-content-center align-items-center flex-column text-center">
+          <h3>سالن</h3>
+          <a id="play-home-video" class="video-play-button" href="https://www.youtube.com/watch?v=vParh5wE-tM">
+            <img src="{% static 'img/home/play-icon.png' %} " alt="">
+          </a>
+          <p>05:35</p>
+        </div>
+      </div>  
+    </section>
+    <!-- ================ video section end ================= --> 
+    
+    <!-- ================ team section start ================= -->      
+    <section class="section-padding--large bg-soapstone">
+      <div class="container">
+        <div class="section-intro pb-70px">
+          <h4 class="section-intro__title">ایماژ تیم</h4>
+          <h2 class="section-intro__subtitle">تیم متخصص ایماژ <span class="d-block">در خدمت تو</span></h2>
+        </div>
+
+        <div class="row">
+          {% for user in users|slice:":3" %}
+            <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+              <div class="card card-team">
+                <div class="card-team__img">
+                  <img class="card-img rounded-0" src="{{user.avatar.url}}" alt="">
+                </div>
+                <div class="card-team__position">
+                  <div class="card-footer d-flex justify-content-between align-items-center">
+                    <div class="card-team__bio">
+                      <h4><a >{{user.user.name}} {{user.user.last_name}}</a></h4>
+                      <p>{{user.title}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section> 
+    <!-- ================ team section end ================= -->      
+
+
+
+    <!-- ================ blog section start ================= -->      
+    <section class="section-margin--large">
+      <div class="container">
+        <div class="section-intro pb-70px">
+          <h4 class="section-intro__title">ایماژ بلاگ</h4>
+          <h2 class="section-intro__subtitle">درباره ی زیبایی <span class="d-block">بخوانید</span></h2>
+        </div>
+        <div class="row">
+          {% for blog in blogs %}
+            <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+              <a href='{% url "BlogPage" blog.id %}'>
+              <div class="card card-blog">
+                <div class="card-blog__img">
+                  <img class="card-img rounded-0" src="{{blog.image.url}}" alt="">
+                </div>
+                <div class="card-body">
+                  <ul class="card-blog__info">
+                    <li><a href='{% url "BlogPage" blog.id %}'><i class="ti-notepad"></i>18/01/2019</a></li>
+                  </ul>
+                  <h3 class="card-blog__title"><a href='{% url "BlogPage" blog.id %}'>{{blog.title}}</a></h3>
+                  <p>Nibh turpis Dictumst litora curae imperdiet an aelementum proin parturient torquent.</p>
+                </div>
+              </div>
+            </a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    <!-- ================ blog section end ================= -->
+
+
+
+
+  </main>   
+
+
+{% endblock content %}

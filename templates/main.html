@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock title %}</title>
+	<link rel="icon" href="{% static 'img/Fevicon.png' %} " type="image/png">
+
+    <link rel="stylesheet" href="{% static 'vendors/bootstrap/bootstrap.min.css' %} ">
+    <link rel="stylesheet" href="{% static 'vendors/fontawesome/css/all.min.css' %} ">
+    <link rel="stylesheet" href="{% static 'vendors/themify-icons/themify-icons.css' %} ">
+    <link rel="stylesheet" href="{% static 'vendors/flat-icon/flaticon.css' %} ">
+        <link rel="stylesheet" href="{% static 'vendors/nice-select/nice-select.css' %} ">
+    <link rel="stylesheet" href="{% static 'vendors/Magnific-Popup/magnific-popup.css' %} ">	
+    <link rel="stylesheet" href="{% static 'vendors/OwlCarousel/owl.theme.default.min.css' %} ">
+    <link rel="stylesheet" href="{% static 'vendors/OwlCarousel/owl.carousel.min.css' %} ">
+    <link rel="stylesheet" href="{% static 'css/style.css' %} ">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
+
+    </head>
+    <body>
+        <!-- ================ start header Area ================= -->  
+        
+        <header class="header_area sticky-header">
+            <div class="main_menu">
+                <nav class="navbar navbar-expand-lg navbar-light main_box">
+                    <div class="container">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        {% if request.user.is_authenticated %}
+                            {% if user.level == "1" %}
+                            <a class="navbar-brand logo_h" style="color:#99513a" href="{% url 'userDash' request.user.id %}">پنل شخصی</a>
+                            {% endif %}
+                            {% if user.level == "2" or user.level == "3" %}
+                            <a class="navbar-brand logo_h" style="color:#99513a" href="{% url 'adminDash' %}">پنل شخصی</a>
+                            {% endif %}
+                        {% else %}
+                        <a class="navbar-brand logo_h" style="color:#99513a" href="{% url 'Authcheck' %}">ورود</a>
+                        {% endif %}
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                            <ul class="nav navbar-nav menu_nav ml-auto">
+                                <li class="nav-item {% block mainPage %}{% endblock mainPage %}"><a class="nav-link" href="{% url 'indexPage' %}">صفحه اصلی</a></li>
+                                <li class="nav-item {% block blogPage %}{% endblock blogPage %}"><a class="nav-link" href="{% url 'blogs' %}">بلاگ</a></li>
+                                <li class="nav-item {% block academyPage %}{% endblock academyPage %}"><a class="nav-link" href="{% url 'academy' %}">آکادمی</a></li>
+                                <li class="nav-item {% block appointmentPage %}{% endblock appointmentPage %}"><a class="nav-link" href="{% url 'booking' %}">رزرو نوبت</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <!-- ================ end header Area ================= -->  
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                {% if messages %}
+                    // Create empty arrays to store success and error messages
+                    var successMessages = [];
+                    var errorMessages = [];
+            
+                    // Loop through each message and categorize them as success or error
+                    {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                            errorMessages.push("{{ message|safe }}");
+                        {% else %}
+                            successMessages.push("{{ message|safe }}");
+                        {% endif %}
+                    {% endfor %}
+            
+                    // Function to generate HTML list from an array of messages
+                    function generateHTMLList(messages) {
+                        var html = '<ul class="messages">';
+                        messages.forEach(function(message) {
+                            html += '<li>' + message + '</li>';
+                        });
+                        html += '</ul>';
+                        return html;
+                    }
+            
+                    // Display SweetAlert modals for success and error messages separately
+                    if (successMessages.length > 0) {
+                        var successMessageText = generateHTMLList(successMessages);
+                        Swal.fire({
+                            title: 'تبریک',
+                            html: successMessageText,
+                            icon: 'success',
+                            confirmButtonText: 'باشه', // Custom text for the OK button
+                            confirmButtonColor: '#61382b' // Custom color for the OK button
+                        });
+                    }
+            
+                    if (errorMessages.length > 0) {
+                        var errorMessageText = generateHTMLList(errorMessages);
+                        Swal.fire({
+                            title: 'ارور',
+                            html: errorMessageText,
+                            icon: 'error',
+                            confirmButtonText: 'باشه', // Custom text for the OK button
+                            confirmButtonColor: '#61382b' // Custom color for the OK button
+                        });
+                    }
+                {% endif %}
+            });
+        </script>
+        {% block content %}{% endblock content %}
+        
+
+        <script src="{% static 'vendors/jquery/jquery-3.2.1.min.js' %} "></script>
+        <script src="{% static 'vendors/bootstrap/bootstrap.bundle.min.js' %} "></script>
+        <script src="{% static 'vendors/OwlCarousel/owl.carousel.min.js' %} "></script>
+        <script src="{% static 'vendors/sticky/jquery.sticky.js' %} "></script>
+        <script src="{% static 'js/jquery.ajaxchimp.min.js' %} "></script>
+        <script src="{% static 'js/mail-script.js' %} "></script>
+        <script src="{% static 'vendors/Magnific-Popup/jquery.magnific-popup.min.js' %} "></script>	
+        <script src="{% static 'js/main.js' %} "></script>
+    </body>
+</html>

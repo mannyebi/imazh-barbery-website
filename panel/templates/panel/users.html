@@ -1,0 +1,408 @@
+{% extends "adminMain.html" %}
+{% load static %}
+{% load jformat %}
+{% block title %}کاربران{% endblock title %}
+
+{% block js %}
+    <script src="{% static 'assets/js/bundle.js' %} "></script>
+    <script src="{% static 'assets/js/scripts.js' %} "></script>
+    <script src="{% static 'assets/js/demo-settings.js' %} "></script>
+{% endblock js %}
+
+    
+{% block content %}
+
+
+
+    <div class="nk-content">
+        <div class="container-fluid">
+            <div class="nk-content-inner">
+                <div class="nk-content-body">
+
+                    
+
+                    <div class="nk-block-head nk-block-head-sm">
+                        <div class="nk-block-between">
+                            <div class="nk-block-head-content">
+                                <h3 class="nk-block-title page-title">کاربر ها</h3>
+                                <div class="nk-block-des text-soft">
+                                    <p>{{today|jformat:"%A %d %B | %H:%M"}}</p>
+                                </div>
+                            </div>
+                            <!-- .nk-block-head-content -->
+                            <div class="nk-block-head-content">
+                                <div class="toggle-wrap nk-block-tools-toggle">
+                                    <a href="#" class="btn btn-icon btn-trigger toggle-expand me-n1" data-target="more-options"><em class="icon ni ni-more-v"></em></a>
+                                    <div class="toggle-expand-content" data-content="more-options">
+                                        <ul class="nk-block-tools g-3">
+                                            <li>
+                                                <div class="drodown">
+                                                    <a href="#" class="dropdown-toggle dropdown-indicator btn btn-outline-light btn-white" data-bs-toggle="dropdown">فیلتر</a>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <ul class="link-list-opt no-bdr">
+                                                            <li>
+                                                                <a href="{% url 'users' %}"><span>همه</span></a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="{% url 'users' %}?b=True"><span>بن شده ها</span></a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="{% url 'users' %}?a=True"><span>دارای نوبت فعال</span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="nk-block-tools-opt">
+                                                <a href="#" class="btn btn-icon btn-primary d-md-none" data-bs-toggle="modal" data-bs-target="#modalForm"><em class="icon ni ni-plus"></em></a>
+                                                <button type="button" class="btn btn-primary d-none d-md-inline-flex" data-bs-toggle="modal" data-bs-target="#modalForm"><em class="icon ni ni-plus"></em><span>افزودن کاربر</span></button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- .nk-block-head-content -->
+                        </div>
+                        <!-- .nk-block-between -->
+                    </div>
+                    <!-- .nk-block-head -->
+                    <div class="nk-block">
+                        <div class="nk-tb-list is-separate mb-3">
+                            <div class="nk-tb-item nk-tb-head">
+                                <div class="nk-tb-col "><span class="sub-text">کاربر</span></div>
+                                <div class="nk-tb-col tb-col-md"><span class="sub-text">اطلاعات کاربر</span></div>
+                                <div class="nk-tb-col tb-col-lg"><span class="sub-text">تعداد کل نوبت ها</span></div>
+                                <div class="nk-tb-col tb-col-md"><span class="sub-text">تلفن</span></div>
+                                <div class="nk-tb-col tb-col-md"><span class="sub-text">آخرین نوبت</span></div>
+                                <div class="nk-tb-col tb-col-lg"><span class="sub-text">نوبت فعال</span></div>
+                                <div class="nk-tb-col tb-col-sm"><span class="sub-text">بن</span></div>
+                                <div class="nk-tb-col nk-tb-col-tools">
+                                    <ul class="nk-tb-actions gx-1 my-n1">
+                                        <li>
+                                            <div class="drodown">
+                                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger me-n1" data-bs-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <ul class="link-list-opt no-bdr">
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="modal"  data-bs-target="#sendsmstoall"><em class="icon ni ni-mail"></em><span>ارسال پیامک به همه</span></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- .nk-tb-item -->
+                            {% for user in profiles %}
+                            <div class="nk-tb-item ">
+                                <div class="nk-tb-col  ">
+                                    <a href="{% url 'Users_detail' user.id %}">
+                                        <div class="user-card">
+                                            <div class="user-avatar bg-primary">
+                                                <span>{{user.name.0}} {{user.last_name.0}}</span>
+                                            </div>
+                                            <div class="user-info">
+                                                <span class="tb-lead">{{user.name}} {{user.last_name}}<span class="dot dot-success d-md-none ms-1"></span></span>
+                                                <span>{{user.username}}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="nk-tb-col tb-col-md ">
+                                    <a href="{% url 'Users_detail' user.id %}" class="tb-amount">اطلاعات کاربر</a>
+                                </div>
+                                <div class="nk-tb-col tb-col-lg ">
+                                    <span class="tb-amount">{{user.num_appointments}}</span>
+                                </div>
+                                <div class="nk-tb-col tb-col-md ">
+                                    <span>{{user.username}}</span>
+                                </div>
+                                <div class="nk-tb-col tb-col-md ">
+                                    <!--this will check if the latest appointment is for this year or not to show the result in different formats-->
+                                    {% if user.latest_appointment|jformat:"%Y" == today|jformat:"%Y" %}
+                                        <span>{% if user.latest_appointment %}{{user.latest_appointment|jformat:"%A - %d %B"}}{% else %}نوبتی ثبت نشده {% endif %} </span>
+                                    {% else %}
+                                        <span>{% if user.latest_appointment %}{{user.latest_appointment|jformat:"%d %B - %Y"}}{% else %}نوبتی ثبت نشده {% endif %} </span>
+                                    {% endif %}
+                                </div>
+                                <div class="nk-tb-col tb-col-lg ">
+                                    {% if user in free_appointments %}
+                                        <span class="tb-status text-success"> دارد </span>
+                                    {% else %}
+                                        <span class="tb-status text-danger"> ندارد </span>
+                                    {% endif %}
+                                </div>
+                                <div class="nk-tb-col tb-col-sm ">
+                                    {% if user.banned == False %}
+                                        <span class="tb-status text-success"> نشده </span>
+                                    {% else %}
+                                        <span class="tb-status text-danger"> شده </span>
+                                    {% endif %}
+                                </div>
+                                <div class="nk-tb-col nk-tb-col-tools ">
+                                    <ul class="nk-tb-actions gx-1">
+                                        <li class="nk-tb-action-hidden">
+                                            <a href="#"  class="btn btn-trigger btn-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="ارسال پیامک">
+                                                <em data-bs-toggle="modal" data-bs-target="#sendsmsto-{{user.id}}" class="icon ni ni-mail-fill"></em>
+                                            </a>
+                                        </li>
+                                        <li class="nk-tb-action-hidden">
+                                            {% if user.banned == False %}
+                                            <a  class="btn btn-trigger btn-icon"  data-bs-toggle="tooltip" data-bs-placement="top" title="بن کردن">
+                                                <em  style="border:None;" data-bs-toggle="modal" data-bs-target="#modalbann-{{user.id}}" class="icon ni ni-user-cross-fill"></em>
+                                            </a>
+                                            {% else %}
+                                            <a class="btn btn-trigger btn-icon"  data-bs-toggle="tooltip" data-bs-placement="top" title="آنبن کردن">
+                                                <em  style="border:None;" data-bs-toggle="modal" data-bs-target="#modalunbann-{{user.id}}" class="icon ni ni-user-cross-fill"></em>
+                                            </a>
+                                            {% endif %}
+                                                
+                                        </li>
+                                            <li>
+                                            <div class="drodown">
+                                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <ul class="link-list-opt no-bdr">
+                                                        <li>
+                                                            <a href="{% url 'Users_detail' user.id %}"><em class="icon ni ni-user"></em><span>اطلاعات کاربر</span></a>
+                                                        </li>
+                                                        <li>
+                                                            <a data-bs-toggle="modal" data-bs-target="#sendsmsto-{{user.id}}" href="#"><em class="icon ni ni-mail"></em><span> ارسال پیامک</span></a>
+                                                        </li>
+                                                        <li class="divider"></li>
+                                                        <li>
+                                                            <a data-bs-toggle="modal" data-bs-target="#modaldeleteuser-{{user.id}}" style="border:None;"  href="#"><em class="icon ni ni-trash"></em><span>حذف</span></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+
+                            <!--modal bann start-->
+                            <div class="modal fade" tabindex="-1" id="modalbann-{{user.id}}">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <a href="#" class="close" data-bs-dismiss="modal"><em class="icon ni ni-cross"></em></a>
+                                        <div class="modal-body modal-body-lg text-center">
+                                            <form method="POST" action='{% url "bannUser" user.id %}'>
+                                            {% csrf_token %}
+                                            <div class="nk-modal">
+                                                <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-alert bg-warning"></em>
+                                                <h4 class="nk-modal-title">توجه کنید!</h4>
+                                                <div class="nk-modal-text">
+                                                    <div class="caption-text">آیا مطمئن هستید که <span class="fw-bold">{{user.name}} {{user.last_name}}</span> را بن کنید؟</div>
+                                                </div>
+                                                <div class="nk-modal-action">
+                                                    <button type='submit' class="btn btn-lg btn-mw btn-primary">بله</button>
+                                                </div>
+                                            </form>
+                                            </div>
+                                        </div>
+                                        <!-- .modal-body -->
+                                        <div class="modal-footer bg-lighter">
+                                            <div class="text-center w-100">
+                                                <p>بعدا میتوانید  {{user.name}} {{user.last_name}} را آنبن کنید</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--modal bann end-->
+
+                            <!--modal unbann start-->
+                            <div class="modal fade" tabindex="-1" id="modalunbann-{{user.id}}">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <a href="#" class="close" data-bs-dismiss="modal"><em class="icon ni ni-cross"></em></a>
+                                        <div class="modal-body modal-body-lg text-center">
+                                            <form method="POST" action='{% url "bannUser" user.id %}'>
+                                                {% csrf_token %}
+                                                <div class="nk-modal">
+                                                    <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-alert bg-warning"></em>
+                                                    <h4 class="nk-modal-title">توجه کنید!</h4>
+                                                    <div class="nk-modal-text">
+                                                        <div class="caption-text">آیا مطمئن هستید که <span class="fw-bold">{{user.name}} {{user.last_name}}</span> را آنبن کنید؟</div>
+                                                    </div>
+                                                    <div class="nk-modal-action">
+                                                        <button type='submit' class="btn btn-lg btn-mw btn-primary">بله</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--modal unbann end-->
+
+                            <!--modal delete user start-->
+                            <div class="modal fade" tabindex="-1" id="modaldeleteuser-{{user.id}}">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <a href="#" class="close" data-bs-dismiss="modal"><em class="icon ni ni-cross"></em></a>
+                                        <div class="modal-body modal-body-lg text-center">
+                                            <div class="nk-modal">
+                                                <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-alert bg-danger"></em>
+                                                <h4 class="nk-modal-title">توجه کنید!</h4>
+                                                <div class="nk-modal-text">
+                                                    <div class="caption-text">آیا مطمئن هستید که <span class="fw-bold">{{user.name}} {{user.last_name}}</span> را حذف کنید؟</div>
+                                                </div>
+                                                <form method="POST" action='{% url "deleteUsers" user.id %}'>
+                                                    {% csrf_token %}
+                                                    <div class="nk-modal-action">
+                                                        <button class="btn btn-lg btn-mw btn-primary">بله</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--modal delete user end-->
+
+
+                            <!--modal sendsms to specific user start-->
+                            <div class="modal fade" id="sendsmsto-{{user.id}}">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">ارسال پیامک به {{user.name}} {{user.last_name}}</h5>
+                                            <a href="#" class="close" data-bs-dismiss="modal" aria-label="بستن">
+                                                <em class="icon ni ni-cross"></em>
+                                            </a>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="POST" action="{% url 'send_sms_to_users' user.id %}" class="form-validate is-alter">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <label class="form-label" for="default-textarea">متن پیامک :</label>
+                                                    <div class="form-control-wrap">
+                                                        <textarea class="form-control no-resize" name="text" id="default-textarea"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label" for="email-address">ارسال به :</label>
+                                                    <div class="form-control-wrap">
+                                                        <input type="text" class="form-control" value="{{user.name}} {{user.last_name}} | {{user.username}}" id="email-address" disabled required />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-lg btn-primary">ارسال</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer bg-light">
+                                            <span class="sub-text">ایماژ</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--modal send sms to specific user end-->
+
+                            {% endfor %}
+                            <!-- .nk-tb-item -->
+
+
+
+                            <!-- modals -->
+
+                            <!--modal add user start-->
+                            <div class="modal fade" id="modalForm">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">اطلاعات کاربر</h5>
+                                            <a href="#" class="close" data-bs-dismiss="modal" aria-label="بستن">
+                                                <em class="icon ni ni-cross"></em>
+                                            </a>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="POST" action="{% url 'addUsers' %}" class="form-validate is-alter">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <label class="form-label" for="full-name">نام</label>
+                                                    <div class="form-control-wrap">
+                                                        <input type="text" class="form-control" name="name" id="full-name" required />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label" for="email-address">نام خانوادگی</label>
+                                                    <div class="form-control-wrap">
+                                                        <input type="text" class="form-control" name="last_name" id="email-address" required />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label" for="phone-no">شماره تلفن</label>
+                                                    <div class="form-control-wrap">
+                                                        <input type="text" class="form-control" name="phonenum" id="phone-no" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-lg btn-primary">ثبت کاربر جدید</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer bg-light">
+                                            <span class="sub-text">ایماژ</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--modal add user end-->
+
+                            <!--modal sendsms to all users start-->
+                            <div class="modal fade" id="sendsmstoall">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">ارسال پیامک به تمام کاربران</h5>
+                                            <a href="#" class="close" data-bs-dismiss="modal" aria-label="بستن">
+                                                <em class="icon ni ni-cross"></em>
+                                            </a>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="POST" action="{% url 'send_sms_to_users' 'all' %}" class="form-validate is-alter">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <label class="form-label" for="default-textarea">متن پیامک :</label>
+                                                    <div class="form-control-wrap">
+                                                        <textarea class="form-control no-resize" name="text" id="default-textarea"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label" for="email-address">ارسال به :</label>
+                                                    <div class="form-control-wrap">
+                                                        <input type="text" class="form-control" value="همه ی کاربران" id="email-address" disabled required />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-lg btn-primary">ارسال</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer bg-light">
+                                            <span class="sub-text">ایماژ</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--modal send sms to all users end-->
+
+                            
+
+
+                        </div>
+                        
+                    </div>
+                    <!-- .nk-block -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
